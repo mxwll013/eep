@@ -89,7 +89,7 @@ BreakConstructorInitializers: AfterColon
 BreakFunctionDefinitionParameters: false
 BreakInheritanceList: AfterColon
 BreakStringLiterals: true
-BreakTemplateDeclarations: Yes
+BreakTemplateDeclarations: MultiLine
 
 ColumnLimit: 80
 CompactNamespaces: false

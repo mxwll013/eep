@@ -19,12 +19,10 @@
 
 #include <unistd.h>
 
-#include <cstdlib>
-
 inline namespace srr {
 namespace sys {
 
-void exit(exitc c) noexcept { ::exit(static_cast<int>(c)); }
+void exit(exitc c) noexcept { ::_exit(static_cast<int>(c)); }
 
 err  write(sink s, strv v) noexcept {
     const isize w = ::write(static_cast<int>(s), v.data(), v.len());

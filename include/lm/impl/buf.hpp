@@ -11,13 +11,19 @@
  * ------------------------------------------------------------------------------
  */
 
-#include "lm/log.hpp"
+#ifndef LM_IMPL_BUF_HPP_
+#define LM_IMPL_BUF_HPP_
 
-#include <srr/str.hpp>
-#include <srr/sys.hpp>
+#include <srr/ctr.hpp>
+#include <srr/types.hpp>
 
-namespace lm {
+namespace lm::impl {
 
-void log(strv msg) noexcept { sys::write(sys::COUT, msg); }
+static constexpr usize BUF_LEN = 1024;
 
-} // namespace lm
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
+static thread_local arr<char, BUF_LEN> fmt_buf;
+
+} // namespace lm::impl
+
+#endif // LM_IMPL_BUF_HPP_

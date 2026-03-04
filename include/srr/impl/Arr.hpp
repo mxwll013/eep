@@ -14,23 +14,34 @@
 #ifndef SRR_IMPL_ARR_HPP_
 #define SRR_IMPL_ARR_HPP_
 
+#include "srr/impl/Span.hpp"
+
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
 
 inline namespace srr {
 namespace impl {
 
-template<typename T, usize N>
-class Arr {
+template<typename T, usize N> class Arr {
 public:
-    [[nodiscard]] constexpr Arr(const T (&arr)[N]) noexcept;
-    template<typename... U>
-    [[nodiscard]] constexpr Arr(U &&...args) noexcept;
+    constexpr Arr() noexcept;
+    consteval Arr(const T (&arr)[N + 1]) noexcept;
+    template<typename... U> constexpr Arr(U &&...args) noexcept;
 
-    [[nodiscard]] constexpr T       &operator[](usize i) noexcept;
-    [[nodiscard]] constexpr const T &operator[](usize i) const noexcept;
+    [[nodiscard]] constexpr T            &operator[](usize i) noexcept;
+    [[nodiscard]] constexpr const T      &operator[](usize i) const noexcept;
 
-    [[nodiscard]] constexpr usize    len() const noexcept;
+    [[nodiscard]] constexpr usize         len() const noexcept;
+    [[nodiscard]] constexpr T            *data() noexcept;
+    [[nodiscard]] constexpr const T      *data() const noexcept;
+    [[nodiscard]] constexpr T            *end() noexcept;
+    [[nodiscard]] constexpr const T      *end() const noexcept;
+
+    [[nodiscard]] constexpr Span<T>       span(usize s, usize e) noexcept;
+    [[nodiscard]] constexpr Span<const T> span(usize s, usize e) const noexcept;
+
+    constexpr                             operator Span<T>() noexcept;
+    constexpr operator Span<const T>() const noexcept;
 
 private:
     T arr_[N] = {};
@@ -38,8 +49,12 @@ private:
 
 // === impl ===
 
+template<typename T, usize N> constexpr Arr<T, N>::Arr() noexcept {
+    for (usize i = 0; i < N; ++i) arr_[i] = T{};
+}
+
 template<typename T, usize N>
-constexpr Arr<T, N>::Arr(const T (&arr)[N]) noexcept {
+consteval Arr<T, N>::Arr(const T (&arr)[N + 1]) noexcept {
     for (usize i = 0; i < N; ++i) arr_[i] = arr[i];
 }
 
@@ -60,9 +75,45 @@ constexpr const T &Arr<T, N>::operator[](usize i) const noexcept {
     return arr_[i];
 }
 
-template<typename T, usize N>
-constexpr usize Arr<T, N>::len() const noexcept {
+template<typename T, usize N> constexpr usize Arr<T, N>::len() const noexcept {
     return N;
+}
+
+template<typename T, usize N> constexpr T *Arr<T, N>::data() noexcept {
+    return arr_;
+}
+
+template<typename T, usize N>
+constexpr const T *Arr<T, N>::data() const noexcept {
+    return arr_;
+}
+
+template<typename T, usize N> constexpr T *Arr<T, N>::end() noexcept {
+    return arr_ + N;
+}
+
+template<typename T, usize N>
+constexpr const T *Arr<T, N>::end() const noexcept {
+    return arr_ + N;
+}
+
+template<typename T, usize N>
+constexpr Span<T> Arr<T, N>::span(usize s, usize e) noexcept {
+    return { &arr_[s], e - s };
+}
+
+template<typename T, usize N>
+constexpr Span<const T> Arr<T, N>::span(usize s, usize e) const noexcept {
+    return { &arr_[s], e - s };
+}
+
+template<typename T, usize N> constexpr Arr<T, N>::operator Span<T>() noexcept {
+    return { arr_, N };
+}
+
+template<typename T, usize N>
+constexpr Arr<T, N>::operator Span<const T>() const noexcept {
+    return { arr_, N };
 }
 
 } // namespace impl

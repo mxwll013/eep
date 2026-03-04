@@ -14,6 +14,7 @@
 #ifndef SRR_STR_HPP_
 #define SRR_STR_HPP_
 
+#include "srr/impl/Arr.hpp"
 #include "srr/impl/Span.hpp"
 #include "srr/impl/Str.hpp"
 
@@ -23,8 +24,17 @@ inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-using str  = impl::Str<char>;
-using strv = impl::Span<char>;
+// String (owning)
+using str                      = impl::Str<char>;
+
+// String view (mutable)
+using strb                     = impl::Span<char>;
+
+// String view (immutable)
+using strv                     = impl::Span<const char>;
+
+// Fixed string
+template<usize N> using fx_str = impl::Arr<char, N>;
 
 // NOLINTEND(readability-identifier-naming)
 

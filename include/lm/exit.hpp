@@ -20,7 +20,6 @@
 namespace lm {
 
 [[noreturn]] void exit(err e) noexcept;
-[[noreturn]] void exit(errc c) noexcept;
 [[noreturn]] void exit(exitc c) noexcept;
 
 void              assert(bool c) noexcept;

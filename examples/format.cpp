@@ -15,6 +15,6 @@
 #include <srr/types.hpp>
 
 i32 main() {
-    lm::log("Hello, world!");
+    lm::log("Hello, {}!", "world");
     return 0;
 }

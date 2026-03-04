@@ -23,6 +23,7 @@ namespace sys {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
+// Sink (output stream)
 using sink             = u8;
 
 // NOLINTEND(readability-identifier-naming)

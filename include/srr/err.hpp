@@ -22,8 +22,13 @@ inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
+// Exit code
 using exitc = enum class Exitc : u8;
+
+// Error code
 using errc  = enum class Errc : u8;
+
+// Error
 using err   = class Err;
 
 // NOLINTEND(readability-identifier-naming)
@@ -48,17 +53,16 @@ enum class Errc : u8 {
     ERRC_COUNT,
 };
 
+[[nodiscard]] constexpr strv  msg(exitc c) noexcept;
+[[nodiscard]] constexpr strv  msg(errc c) noexcept;
 [[nodiscard]] constexpr exitc cast(errc c) noexcept;
-
-[[nodiscard]] constexpr strv  fmt(exitc c) noexcept;
-[[nodiscard]] constexpr strv  fmt(errc c) noexcept;
-[[nodiscard]] constexpr strv  fmt(err e) noexcept;
 
 class Err {
 public:
-    [[nodiscard]] constexpr Err() noexcept;
-    [[nodiscard]] constexpr Err(errc c) noexcept;
+    constexpr Err() noexcept;
+    constexpr Err(errc c) noexcept;
 
+    [[nodiscard]] constexpr strv  msg() const noexcept;
     [[nodiscard]] constexpr errc  get() const noexcept;
     [[nodiscard]] constexpr exitc cast() const noexcept;
 
@@ -76,9 +80,7 @@ static constexpr usize ERRC_COUNT  = static_cast<usize>(errc::ERRC_COUNT);
 static constexpr arr<strv, EXITC_COUNT> STR_EXITC = {
     "Ok",
     "Fail",
-
     "Assertion error",
-
     "System error",
 };
 
@@ -96,21 +98,21 @@ static constexpr arr<exitc, ERRC_COUNT> CAST_ERRC = {
     Exitc::SYS,  // errc::SYS_WRITE_FAIL
 };
 
+constexpr strv msg(exitc c) noexcept {
+    return STR_EXITC[static_cast<usize>(c)];
+}
+
+constexpr strv  msg(errc c) noexcept { return STR_ERRC[static_cast<usize>(c)]; }
+
 constexpr exitc cast(errc c) noexcept {
     return CAST_ERRC[static_cast<usize>(c)];
 }
 
-constexpr strv fmt(exitc c) noexcept {
-    return STR_EXITC[static_cast<usize>(c)];
-}
-
-constexpr strv fmt(errc c) noexcept { return STR_ERRC[static_cast<usize>(c)]; }
-
-constexpr strv fmt(err e) noexcept { return fmt(e.get()); }
-
 constexpr Err::Err() noexcept : c_{ errc::OK } {}
 
 constexpr Err::Err(errc c) noexcept : c_{ c } {}
+
+constexpr strv  Err::msg() const noexcept { return ::msg(c_); }
 
 constexpr errc  Err::get() const noexcept { return c_; }
 

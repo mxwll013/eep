@@ -21,17 +21,19 @@ inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-using i8                  = std::int8_t;
-using i16                 = std::int16_t;
-using i32                 = std::int32_t;
-using i64                 = std::int64_t;
-using isize               = std::ptrdiff_t;
+using nil                 = decltype(nullptr);
 
-using u8                  = std::uint8_t;
-using u16                 = std::uint16_t;
-using u32                 = std::uint32_t;
-using u64                 = std::uint64_t;
-using usize               = std::size_t;
+using i8                  = int8_t;
+using i16                 = int16_t;
+using i32                 = int32_t;
+using i64                 = int64_t;
+using isize               = ptrdiff_t;
+
+using u8                  = uint8_t;
+using u16                 = uint16_t;
+using u32                 = uint32_t;
+using u64                 = uint64_t;
+using usize               = size_t;
 
 using f32                 = float;
 using f64                 = double;
@@ -61,6 +63,38 @@ constexpr f64   MAX_F64   = __DBL_MAX__;
 
 constexpr f32   MIN_F32   = __FLT_MIN__;
 constexpr f64   MIN_F64   = __DBL_MIN__;
+
+consteval i8    operator""_i8(unsigned long long v) noexcept {
+    return static_cast<i8>(v);
+}
+
+consteval i16 operator""_i16(unsigned long long v) noexcept {
+    return static_cast<i16>(v);
+}
+
+consteval i32 operator""_i32(unsigned long long v) noexcept {
+    return static_cast<i32>(v);
+}
+
+consteval i64 operator""_i64(unsigned long long v) noexcept {
+    return static_cast<i64>(v);
+}
+
+consteval u8 operator""_u8(unsigned long long v) noexcept {
+    return static_cast<u8>(v);
+}
+
+consteval u16 operator""_u16(unsigned long long v) noexcept {
+    return static_cast<u16>(v);
+}
+
+consteval u32 operator""_u32(unsigned long long v) noexcept {
+    return static_cast<u32>(v);
+}
+
+consteval u64 operator""_u64(unsigned long long v) noexcept {
+    return static_cast<u64>(v);
+}
 
 } // namespace srr
 

@@ -11,7 +11,19 @@ A simple and fast game engine built in C++20.
 #include <srr/types.hpp>
 
 i32 main() {
-    lm::log("Hello, world!\n");
+    lm::log("Hello, world!");
+    return 0;
+}
+```
+
+2. `format.cpp`:
+
+```cpp
+#include <lm/log.hpp>
+#include <srr/types.hpp>
+
+i32 main() {
+    lm::log("Hello, {}!", "world");
     return 0;
 }
 ```

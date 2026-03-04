@@ -60,13 +60,16 @@ Diagnostics:
     Remove:
       - bugprone-easily-swappable-parameters
       - cppcoreguidelines-avoid-c-arrays
+      - cppcoreguidelines-avoid-magic-numbers
       - cppcoreguidelines-missing-std-forward
       - cppcoreguidelines-pro-bounds-constant-array-index
       - cppcoreguidelines-pro-bounds-pointer-arithmetic
+      - cppcoreguidelines-pro-type-reinterpret-cast
       - cppcoreguidelines-pro-type-union-access
       - cppcoreguidelines-rvalue-reference-param-not-moved
       - hicpp-avoid-c-arrays
       - hicpp-braces-around-statements
+      - hicpp-exception-baseclass
       - hicpp-explicit-conversions
       - hicpp-use-auto
       - misc-no-recursion
@@ -75,6 +78,7 @@ Diagnostics:
       - modernize-use-trailing-return-type
       - readability-braces-around-statements
       - readability-identifier-length
+      - readability-magic-numbers
 
     CheckOptions:
       readability-identifier-naming.NamespaceCase: lower_case
