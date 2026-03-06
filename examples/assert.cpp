@@ -11,20 +11,12 @@
  * ------------------------------------------------------------------------------
  */
 
-#ifndef LM_EXIT_HPP_
-#define LM_EXIT_HPP_
+#include <lm/macros.hpp>
+#include <srr/types.hpp>
 
-#include <srr/err.hpp>
-#include <srr/str.hpp>
+i32 main() {
+    LM_ASSERT(1 == 1, "This will pass");
+    LM_ASSERT(1 != 1, "This will not pass");
 
-namespace lm {
-
-[[noreturn]] void exit(err e) noexcept;
-[[noreturn]] void exit(exitc c) noexcept;
-
-void              assert(bool c) noexcept;
-void              assert(bool c, strv msg) noexcept;
-
-} // namespace lm
-
-#endif // LM_EXIT_HPP_
+    LM_UNREACH();
+}

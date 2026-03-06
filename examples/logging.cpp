@@ -15,6 +15,10 @@
 #include <srr/types.hpp>
 
 i32 main() {
-    LM_LOG("Hello, {}!", "world");
-    LM_EXIT();
+    LM_LOG("Basic log");
+    LM_INFO("Important info");
+    LM_DBG("Debug message");
+    LM_WARN("Warning");
+    LM_ERR("Error");
+    LM_PAN("Panic");
 }

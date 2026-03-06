@@ -37,6 +37,12 @@ public:
     [[nodiscard]] constexpr T            *end() noexcept;
     [[nodiscard]] constexpr const T      *end() const noexcept;
 
+    [[nodiscard]] constexpr usize         copy(Span<const T> src) noexcept;
+
+    [[nodiscard]] constexpr Span<T>       span() noexcept;
+    [[nodiscard]] constexpr Span<const T> span() const noexcept;
+    [[nodiscard]] constexpr Span<T>       span(usize s) noexcept;
+    [[nodiscard]] constexpr Span<const T> span(usize s) const noexcept;
     [[nodiscard]] constexpr Span<T>       span(usize s, usize e) noexcept;
     [[nodiscard]] constexpr Span<const T> span(usize s, usize e) const noexcept;
 
@@ -95,6 +101,15 @@ template<typename T, usize N> constexpr T *Arr<T, N>::end() noexcept {
 template<typename T, usize N>
 constexpr const T *Arr<T, N>::end() const noexcept {
     return arr_ + N;
+}
+
+template<typename T, usize N>
+constexpr usize Arr<T, N>::copy(Span<const T> src) noexcept {
+    usize n = alg::min(src.len(), N);
+
+    for (usize i = 0; i < n; ++i) arr_[i] = src[i];
+
+    return n;
 }
 
 template<typename T, usize N>

@@ -11,10 +11,10 @@
  * ------------------------------------------------------------------------------
  */
 
-#include <lm/log.hpp>
+#include <lm/macros.hpp>
 #include <srr/types.hpp>
 
 i32 main() {
-    lm::log("Hello, world!");
-    return 0;
+    LM_LOG("Hello, world!");
+    LM_EXIT();
 }

@@ -17,8 +17,18 @@
 #include "srr/impl/Arr.hpp"
 #include "srr/impl/Span.hpp"
 #include "srr/impl/Str.hpp"
+#include "srr/impl/ansi.hpp"
 
 #include "srr/types.hpp"
+
+#define SRR_BLACK(...)   SRR_IMPL_ANSI_BLACK(__VA_ARGS__)
+#define SRR_RED(...)     SRR_IMPL_ANSI_RED(__VA_ARGS__)
+#define SRR_GREEN(...)   SRR_IMPL_ANSI_GREEN(__VA_ARGS__)
+#define SRR_YELLOW(...)  SRR_IMPL_ANSI_YELLOW(__VA_ARGS__)
+#define SRR_BLUE(...)    SRR_IMPL_ANSI_BLUE(__VA_ARGS__)
+#define SRR_MAGENTA(...) SRR_IMPL_ANSI_MAGENTA(__VA_ARGS__)
+#define SRR_CYAN(...)    SRR_IMPL_ANSI_CYAN(__VA_ARGS__)
+#define SRR_WHITE(...)   SRR_IMPL_ANSI_WHITE(__VA_ARGS__)
 
 inline namespace srr {
 

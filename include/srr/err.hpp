@@ -37,6 +37,8 @@ enum class Exitc : u8 {
     OK,
     FAIL,
 
+    PANIC,
+    UNREACHABLE,
     ASSERT,
 
     SYS,
@@ -78,17 +80,14 @@ static constexpr usize EXITC_COUNT = static_cast<usize>(exitc::EXITC_COUNT);
 static constexpr usize ERRC_COUNT  = static_cast<usize>(errc::ERRC_COUNT);
 
 static constexpr arr<strv, EXITC_COUNT> STR_EXITC = {
-    "Ok",
-    "Fail",
-    "Assertion error",
-    "System error",
+    "Ok", "Fail", "Panic", "Unreachable", "Assertion fail", "System error",
 };
 
 static constexpr arr<strv, ERRC_COUNT> STR_ERRC = {
     "Ok",
     "Fail",
 
-    "[sys] Failed on write.",
+    "Failed on write.",
 };
 
 static constexpr arr<exitc, ERRC_COUNT> CAST_ERRC = {

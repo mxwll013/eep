@@ -138,8 +138,8 @@ constexpr usize Fmt<T, U...>::build(Span<T>  buf,
                                     const V &arg,
                                     const W &...args) const noexcept {
     usize n  = build(buf, seg);
-    n       += fmt(buf.shift(n), arg);
-    return n + build(buf.shift(n), seg + 1, args...);
+    n       += fmt(buf.span(n), arg);
+    return n + build(buf.span(n), seg + 1, args...);
 }
 
 } // namespace impl

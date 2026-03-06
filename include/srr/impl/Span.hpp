@@ -31,7 +31,8 @@ public:
     [[nodiscard]] constexpr usize    len() const noexcept;
 
     [[nodiscard]] constexpr usize    copy(Span<const T> src) const noexcept;
-    [[nodiscard]] constexpr Span<T>  shift(usize n) const noexcept;
+
+    [[nodiscard]] constexpr Span<T>  span(usize s) const noexcept;
     [[nodiscard]] constexpr Span<T>  span(usize s, usize e) const noexcept;
 
     constexpr T                     &operator[](usize i) const noexcept;
@@ -77,8 +78,8 @@ constexpr usize Span<T>::copy(Span<const T> src) const noexcept {
     return n;
 }
 
-template<typename T> constexpr Span<T> Span<T>::shift(usize n) const noexcept {
-    return { p_ + n, len_ - n };
+template<typename T> constexpr Span<T> Span<T>::span(usize s) const noexcept {
+    return { p_ + s, len_ - s };
 }
 
 template<typename T>

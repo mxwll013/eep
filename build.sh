@@ -5,10 +5,10 @@ prep() {
 }
 
 compile() {
+    echo "Compiling $1"
+
     local out="build/obj/$1.o"
     prep "$out"
-
-    echo "Compiling $1"
 
     clang++ -std=c++20 -I include/ -c "$1.cpp" -o "$out"
 }
@@ -25,13 +25,14 @@ lib() {
 }
 
 exe() {
+    echo "Linking $1"
+
     local name="$1"
     local in="build/obj/$name.o"
     local out="build/bin/$name"
     prep "$out"
     shift
 
-    echo "Linking $name"
 
     mkdir -p "build/bin"
     clang++ -std=c++20 -I include/ -o "$out" "$in" -L build/lib/ "${@/#/-l}"
@@ -44,20 +45,26 @@ mkdir -p build/obj
 
 srr_sys="src/srr/sys"
 
-lm_exit="src/lm/exit"
+lm_panic="src/lm/panic"
 
 ex_hello_world="examples/hello_world"
 ex_format="examples/format"
+ex_assert="examples/assert"
+ex_logging="examples/logging"
 
 compile "$srr_sys"
 
-compile "$lm_exit"
+compile "$lm_panic"
 
 compile "$ex_hello_world"
 compile "$ex_format"
+compile "$ex_assert"
+compile "$ex_logging"
 
 lib "srr" "${srr_sys}.o"
-lib "lm" "${lm_exit}.o"
+lib "lm" "${lm_panic}.o"
 
 exe "$ex_hello_world" "srr" "lm"
 exe "$ex_format" "srr" "lm"
+exe "$ex_assert" "srr" "lm"
+exe "$ex_logging" "srr" "lm"

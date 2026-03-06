@@ -2,29 +2,19 @@
 
 A simple and fast game engine built in C++20.
 
-## Examples
+## Getting Started
 
-1. `hello_world.cpp`:
+1. Hello World:
 
 ```cpp
-#include <lm/log.hpp>
+// examples/hello_world.cpp
+
+#include <lm/macros.hpp>
 #include <srr/types.hpp>
 
 i32 main() {
-    lm::log("Hello, world!");
-    return 0;
-}
-```
-
-2. `format.cpp`:
-
-```cpp
-#include <lm/log.hpp>
-#include <srr/types.hpp>
-
-i32 main() {
-    lm::log("Hello, {}!", "world");
-    return 0;
+    LM_LOG("Hello, world!");
+    LM_EXIT();
 }
 ```
 
