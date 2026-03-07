@@ -27,6 +27,8 @@ using false_t = bool_constant<false>;
 
 template<typename T, typename U> struct is_same;
 template<typename T> struct no_deduce;
+template<typename T> struct is_triv_cp;
+template<typename T> struct is_triv_ds;
 template<typename T> struct is_int;
 template<typename T> struct is_signed;
 template<typename T> struct make_unsigned;
@@ -40,8 +42,11 @@ template<typename T> using make_unsigned_t = typename make_unsigned<T>::type;
 template<typename T> using rm_ref_t        = typename rm_ref<T>::type;
 
 template<typename T, typename U> constexpr bool is_same_v = is_same<T, U>::val;
-template<typename T> constexpr bool             is_int_v  = is_int<T>::val;
-template<typename T> constexpr bool             is_signed_v = is_signed<T>::val;
+
+template<typename T> constexpr bool is_triv_cp_v          = is_triv_cp<T>::val;
+template<typename T> constexpr bool is_triv_ds_v          = is_triv_ds<T>::val;
+template<typename T> constexpr bool is_int_v              = is_int<T>::val;
+template<typename T> constexpr bool is_signed_v           = is_signed<T>::val;
 template<typename T> constexpr bool is_lvalue_ref_v = is_lvalue_ref<T>::val;
 
 template<usize N, typename... U> constexpr bool is_len_v = is_len<N, U...>::val;
@@ -58,8 +63,9 @@ concept SignedInt = is_int_v<T> && is_signed_v<T>;
 template<typename T>
 concept UnsignedInt = is_int_v<T> && !is_signed_v<T>;
 
-template<typename T> constexpr T &&fwd(rm_ref_t<T> &t) noexcept;
-template<typename T> constexpr T &&fwd(rm_ref_t<T> &&t) noexcept;
+template<typename T> constexpr T           &&fwd(rm_ref_t<T> &t) noexcept;
+template<typename T> constexpr T           &&fwd(rm_ref_t<T> &&t) noexcept;
+template<typename T> constexpr rm_ref_t<T> &&mv(T &&t) noexcept;
 
 // === impl ===
 
@@ -73,6 +79,14 @@ template<typename T> struct is_same<T, T> : true_t {};
 
 template<typename T> struct no_deduce {
     using type = T;
+};
+
+template<typename T> struct is_triv_cp {
+    static constexpr bool val = __is_trivially_copyable(T);
+};
+
+template<typename T> struct is_triv_ds {
+    static constexpr bool val = __is_trivially_destructible(T);
 };
 
 template<typename> struct is_int : false_t {};
@@ -156,6 +170,11 @@ template<typename T> constexpr T &&fwd(rm_ref_t<T> &&t) noexcept {
                   "lvalue reference cannot be forwarded as rvalue");
     return static_cast<T &&>(t);
 }
+
+template<typename T> constexpr rm_ref_t<T> &&mv(T &&t) noexcept {
+    return static_cast<rm_ref_t<T> &&>(t);
+}
+
 
 // NOLINTEND(readability-identifier-naming)
 

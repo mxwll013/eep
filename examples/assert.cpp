@@ -14,7 +14,7 @@
 #include <lm/macros.hpp>
 #include <srr/types.hpp>
 
-i32 main() {
+i32 main() noexcept {
     LM_ASSERT(1 == 1, "This will pass");
     LM_ASSERT(1 != 1, "This will not pass");
 

@@ -50,6 +50,8 @@ enum class Errc : u8 {
     OK,
     FAIL,
 
+    INVALID_ARG,
+
     SYS_WRITE_FAIL,
 
     ERRC_COUNT,
@@ -63,15 +65,19 @@ class Err {
 public:
     constexpr Err() noexcept;
     constexpr Err(errc c) noexcept;
+    constexpr Err(strv msg) noexcept;
+    constexpr Err(strv msg, errc c) noexcept;
 
-    [[nodiscard]] constexpr strv  msg() const noexcept;
-    [[nodiscard]] constexpr errc  get() const noexcept;
-    [[nodiscard]] constexpr exitc cast() const noexcept;
+    [[nodiscard]] constexpr strv msg() const noexcept;
+    [[nodiscard]] constexpr errc code() const noexcept;
 
-    [[nodiscard]] constexpr       operator bool() noexcept;
+    [[nodiscard]] constexpr bool operator!() const noexcept;
+
+    [[nodiscard]] constexpr      operator bool() const noexcept;
 
 private:
     errc c_;
+    strv msg_;
 };
 
 // === impl ===
@@ -87,12 +93,16 @@ static constexpr arr<strv, ERRC_COUNT> STR_ERRC = {
     "Ok",
     "Fail",
 
+    "Invalid argument.",
+
     "Failed on write.",
 };
 
 static constexpr arr<exitc, ERRC_COUNT> CAST_ERRC = {
     Exitc::OK,   // errc::OK
     Exitc::FAIL, // errc::FAIL
+
+    Exitc::FAIL, // errc::INVALID_ARG
 
     Exitc::SYS,  // errc::SYS_WRITE_FAIL
 };
@@ -111,13 +121,17 @@ constexpr Err::Err() noexcept : c_{ errc::OK } {}
 
 constexpr Err::Err(errc c) noexcept : c_{ c } {}
 
-constexpr strv  Err::msg() const noexcept { return ::msg(c_); }
+constexpr Err::Err(strv msg) noexcept : c_{ errc::FAIL }, msg_{ msg } {}
 
-constexpr errc  Err::get() const noexcept { return c_; }
+constexpr Err::Err(strv msg, errc c) noexcept : c_{ c }, msg_{ msg } {}
 
-constexpr exitc Err::cast() const noexcept { return ::cast(c_); }
+constexpr strv Err::msg() const noexcept { return msg_; }
 
-constexpr Err:: operator bool() noexcept { return c_ != errc::OK; }
+constexpr errc Err::code() const noexcept { return c_; }
+
+constexpr bool Err::operator!() const noexcept { return c_ == errc::OK; }
+
+constexpr Err::operator bool() const noexcept { return c_ != errc::OK; }
 
 } // namespace srr
 

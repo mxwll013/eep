@@ -16,6 +16,7 @@
 
 #include "srr/impl/Span.hpp"
 
+#include "srr/mem.hpp"
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
 
@@ -24,7 +25,7 @@ namespace impl {
 
 template<typename T, usize N> class Arr {
 public:
-    constexpr Arr() noexcept;
+    consteval Arr() noexcept;
     consteval Arr(const T (&arr)[N + 1]) noexcept;
     template<typename... U> constexpr Arr(U &&...args) noexcept;
 
@@ -54,9 +55,8 @@ private:
 };
 
 // === impl ===
-
-template<typename T, usize N> constexpr Arr<T, N>::Arr() noexcept {
-    for (usize i = 0; i < N; ++i) arr_[i] = T{};
+template<typename T, usize N> consteval Arr<T, N>::Arr() noexcept {
+    for (usize i = 0; i < N; ++i) arr_[i] = {};
 }
 
 template<typename T, usize N>
@@ -105,11 +105,7 @@ constexpr const T *Arr<T, N>::end() const noexcept {
 
 template<typename T, usize N>
 constexpr usize Arr<T, N>::copy(Span<const T> src) noexcept {
-    usize n = alg::min(src.len(), N);
-
-    for (usize i = 0; i < n; ++i) arr_[i] = src[i];
-
-    return n;
+    return mem::copye(arr_, src.data(), N, src.len());
 }
 
 template<typename T, usize N>

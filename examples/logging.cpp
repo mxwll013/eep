@@ -14,7 +14,7 @@
 #include <lm/macros.hpp>
 #include <srr/types.hpp>
 
-i32 main() {
+i32 main() noexcept {
     LM_LOG("Basic log");
     LM_INFO("Important info");
     LM_DBG("Debug message");

@@ -11,26 +11,26 @@
  * ------------------------------------------------------------------------------
  */
 
-#ifndef SRR_CTR_HPP_
-#define SRR_CTR_HPP_
+#ifndef SRR_OPT_HPP_
+#define SRR_OPT_HPP_
 
-#include "srr/impl/Arr.hpp"
-#include "srr/impl/Span.hpp"
+#include "srr/impl/Res.hpp"
 
-#include "srr/types.hpp"
+#include "srr/err.hpp"
 
 inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-// Array (fixed-size)
-template<typename T, usize N> using arr = impl::Arr<T, N>;
+// Optional (nullable value)
+// template<typename T>
+// using opt = impl::Opt<T>;
 
-// Span (non-owning view)
-template<typename T> using span         = impl::Span<T>;
+// Result (value or error)
+template<typename T> using res = impl::Res<T, err>;
 
 // NOLINTEND(readability-identifier-naming)
 
 } // namespace srr
 
-#endif // SRR_CTR_HPP_
+#endif // SRR_OPT_HPP_

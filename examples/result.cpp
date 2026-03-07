@@ -12,9 +12,33 @@
  */
 
 #include <lm/macros.hpp>
+#include <srr/err.hpp>
+#include <srr/opt.hpp>
 #include <srr/types.hpp>
 
+namespace {
+
+res<i32> func(i32 v) noexcept {
+    if (v > 0) return v * 2;
+
+    return err{ "Value must be positive" };
+}
+
+void check(const res<i32> &r) noexcept {
+    if (r.ok())
+        LM_INFO("{}", r.unwrap());
+    else
+        LM_ERR("{}", r.err());
+}
+
+} // namespace
+
 i32 main() noexcept {
-    LM_LOG("Hello, world!");
+    const res<i32> r1 = func(120);
+    const res<i32> r2 = func(-10);
+
+    check(r1);
+    check(r2);
+
     LM_EXIT();
 }

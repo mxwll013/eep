@@ -14,7 +14,7 @@
 #ifndef SRR_IMPL_SPAN_HPP_
 #define SRR_IMPL_SPAN_HPP_
 
-#include "srr/alg.hpp"
+#include "srr/mem.hpp"
 #include "srr/types.hpp"
 
 inline namespace srr {
@@ -37,6 +37,7 @@ public:
 
     constexpr T                     &operator[](usize i) const noexcept;
 
+    constexpr                        operator bool() const noexcept;
     constexpr                        operator Span<const T>() const noexcept;
 
 private:
@@ -71,11 +72,7 @@ template<typename T> constexpr usize Span<T>::len() const noexcept {
 
 template<typename T>
 constexpr usize Span<T>::copy(Span<const T> src) const noexcept {
-    usize n = alg::min(src.len(), len_);
-
-    for (usize i = 0; i < n; ++i) p_[i] = src[i];
-
-    return n;
+    return mem::copye(p_, src.data(), len_, src.len());
 }
 
 template<typename T> constexpr Span<T> Span<T>::span(usize s) const noexcept {
@@ -89,6 +86,10 @@ constexpr Span<T> Span<T>::span(usize s, usize e) const noexcept {
 
 template<typename T> constexpr T &Span<T>::operator[](usize i) const noexcept {
     return p_[i];
+}
+
+template<typename T> constexpr Span<T>::operator bool() const noexcept {
+    return len_ > 0;
 }
 
 template<typename T>

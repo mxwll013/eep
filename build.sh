@@ -44,15 +44,20 @@ mkdir -p build/obj
 
 
 srr_sys="src/srr/sys"
+srr_mem="src/srr/mem"
 
 lm_panic="src/lm/panic"
 
-ex_hello_world="examples/hello_world"
-ex_format="examples/format"
+ts_mem="tests/mem"
+
 ex_assert="examples/assert"
+ex_format="examples/format"
+ex_hello_world="examples/hello_world"
 ex_logging="examples/logging"
+ex_result="examples/result"
 
 compile "$srr_sys"
+compile "$srr_mem"
 
 compile "$lm_panic"
 
@@ -60,11 +65,17 @@ compile "$ex_hello_world"
 compile "$ex_format"
 compile "$ex_assert"
 compile "$ex_logging"
+compile "$ex_result"
 
-lib "srr" "${srr_sys}.o"
+compile "$ts_mem"
+
+lib "srr" "${srr_sys}.o" "${srr_mem}.o"
 lib "lm" "${lm_panic}.o"
 
 exe "$ex_hello_world" "srr" "lm"
 exe "$ex_format" "srr" "lm"
 exe "$ex_assert" "srr" "lm"
 exe "$ex_logging" "srr" "lm"
+exe "$ex_result" "srr" "lm"
+
+exe "$ts_mem" "srr" "lm"
