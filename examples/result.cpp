@@ -13,7 +13,6 @@
 
 #include <lm/macros.hpp>
 #include <srr/err.hpp>
-#include <srr/opt.hpp>
 #include <srr/types.hpp>
 
 namespace {

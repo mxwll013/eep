@@ -44,17 +44,18 @@ template<Int I> constexpr usize fmt(const strb &buf, I v) noexcept;
 namespace impl {
 
 template<typename T, typename U>
-concept Formattable = requires(const Span<T> &buf, const U &u) {
+concept Fmtable = requires(const Span<T> &buf, const U &u) {
     { fmt(buf, u) } noexcept -> Same<usize>;
 };
 
 template<typename T, typename... U>
-    requires(Formattable<T, U> && ...)
+    requires(Fmtable<T, U> && ...)
 class Fmt {
 public:
     template<usize M> consteval Fmt(const T (&p)[M]) noexcept;
 
-    constexpr usize apply(Span<T> buf, const U &...args) const noexcept;
+    [[nodiscard]] constexpr usize apply(Span<T> buf,
+                                        const U &...args) const noexcept;
 
 private:
     static constexpr usize  N = sizeof...(U);
@@ -76,7 +77,7 @@ private:
 // === impl ===
 
 template<typename T, typename... U>
-    requires(Formattable<T, U> && ...)
+    requires(Fmtable<T, U> && ...)
 template<usize M>
 // NOLINTNEXTLINE(bugprone-exception-escape)
 consteval Fmt<T, U...>::Fmt(const T (&p)[M]) noexcept : str_{ p, M-1 } {
@@ -84,14 +85,14 @@ consteval Fmt<T, U...>::Fmt(const T (&p)[M]) noexcept : str_{ p, M-1 } {
 }
 
 template<typename T, typename... U>
-    requires(Formattable<T, U> && ...)
+    requires(Fmtable<T, U> && ...)
 constexpr usize Fmt<T, U...>::apply(Span<T> buf,
                                     const U &...args) const noexcept {
     return build(buf, 0, args...);
 }
 
 template<typename T, typename... U>
-    requires(Formattable<T, U> && ...)
+    requires(Fmtable<T, U> && ...)
 consteval void Fmt<T, U...>::parse() {
     usize n  = 0;
     segs_[0] = 0;
@@ -122,7 +123,7 @@ consteval void Fmt<T, U...>::parse() {
 }
 
 template<typename T, typename... U>
-    requires(Formattable<T, U> && ...)
+    requires(Fmtable<T, U> && ...)
 constexpr usize Fmt<T, U...>::build(Span<T> buf, usize seg) const noexcept {
     usize s = segs_[seg * 2];
     usize e = segs_[(seg * 2) + 1];
@@ -131,7 +132,7 @@ constexpr usize Fmt<T, U...>::build(Span<T> buf, usize seg) const noexcept {
 }
 
 template<typename T, typename... U>
-    requires(Formattable<T, U> && ...)
+    requires(Fmtable<T, U> && ...)
 template<typename V, typename... W>
 constexpr usize Fmt<T, U...>::build(Span<T>  buf,
                                     usize    seg,

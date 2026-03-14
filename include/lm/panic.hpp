@@ -41,10 +41,10 @@ struct Trace {
 [[noreturn]] void unreach(strv msg) noexcept;
 [[noreturn]] void unreach() noexcept;
 
-void              assert(Trace &&t, bool c, strv s, strv msg) noexcept;
-void              assert(Trace &&t, bool c, strv s) noexcept;
-void              assert(bool c, strv s, strv msg) noexcept;
-void              assert(bool c, strv s) noexcept;
+void              runassert(Trace &&t, bool c, strv s, strv msg) noexcept;
+void              runassert(Trace &&t, bool c, strv s) noexcept;
+void              runassert(bool c, strv s, strv msg) noexcept;
+void              runassert(bool c, strv s) noexcept;
 
 } // namespace lm
 

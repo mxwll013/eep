@@ -11,9 +11,10 @@
  * ------------------------------------------------------------------------------
  */
 
+#include "srr/err.hpp"
+
 #include <lm/macros.hpp>
 #include <srr/ctr.hpp>
-#include <srr/opt.hpp>
 #include <srr/types.hpp>
 
 // NOLINTNEXTLINE(cppcoreguidelines-special-member-functions, hicpp-special-member-functions)

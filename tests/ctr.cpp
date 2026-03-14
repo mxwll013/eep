@@ -11,17 +11,19 @@
  * ------------------------------------------------------------------------------
  */
 
-#ifndef SRR_IMPL_STR_HPP_
-#define SRR_IMPL_STR_HPP_
+#include "srr/ctr.hpp"
 
-inline namespace srr {
-namespace impl {
+#include <lm/macros.hpp>
+#include <srr/types.hpp>
 
-// ...
+#include <cassert>
 
-template<typename T> class Str;
+i32 main() noexcept {
+    const arr<i32, 0>  a;
+    const arr<i32, 10> b = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-} // namespace impl
-} // namespace srr
+    for (usize i = 0; i < b.len(); ++i) LM_ASSERT(i == b[i]);
+    for (i32 e : b) LM_ASSERT(e == b[e]);
 
-#endif // SRR_IMPL_STR_HPP_
+    LM_EXIT();
+}

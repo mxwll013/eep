@@ -14,9 +14,10 @@
 #ifndef SRR_IMPL_ANSI_HPP_
 #define SRR_IMPL_ANSI_HPP_
 
-#define SRR_IMPL_ANSI(...)         "\033[" __VA_ARGS__ "m"
-#define SRR_IMPL_ANSI_RESET        SRR_IMPL_ANSI("0")
-#define SRR_IMPL_ANSI_COLOR(c, x)  SRR_IMPL_ANSI(c) x SRR_IMPL_ANSI_RESET
+#define SRR_IMPL_ANSI(...)  "\033[" __VA_ARGS__ "m"
+#define SRR_IMPL_ANSI_RESET SRR_IMPL_ANSI("0")
+#define SRR_IMPL_ANSI_COLOR(c, ...)                                            \
+    SRR_IMPL_ANSI(c) __VA_ARGS__ SRR_IMPL_ANSI_RESET
 
 #define SRR_IMPL_ANSI_BLACK(...)   SRR_IMPL_ANSI_COLOR("30", __VA_ARGS__)
 #define SRR_IMPL_ANSI_RED(...)     SRR_IMPL_ANSI_COLOR("31", __VA_ARGS__)

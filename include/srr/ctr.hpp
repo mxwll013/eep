@@ -23,7 +23,7 @@ inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-// Array (fixed-size)
+// Array (fixed-size, owning)
 template<typename T, usize N> using arr = impl::Arr<T, N>;
 
 // Span (non-owning view)

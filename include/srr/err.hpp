@@ -14,6 +14,8 @@
 #ifndef SRR_ERR_HPP_
 #define SRR_ERR_HPP_
 
+#include "srr/impl/Res.hpp"
+
 #include "srr/ctr.hpp"
 #include "srr/str.hpp"
 #include "srr/types.hpp"
@@ -23,13 +25,16 @@ inline namespace srr {
 // NOLINTBEGIN(readability-identifier-naming)
 
 // Exit code
-using exitc = enum class Exitc : u8;
+using exitc                    = enum class Exitc : u8;
 
 // Error code
-using errc  = enum class Errc : u8;
+using errc                     = enum class Errc : u8;
 
 // Error
-using err   = class Err;
+using err                      = class Err;
+
+// Result
+template<typename T> using res = impl::Res<T, err>;
 
 // NOLINTEND(readability-identifier-naming)
 
@@ -68,16 +73,15 @@ public:
     constexpr Err(strv msg) noexcept;
     constexpr Err(strv msg, errc c) noexcept;
 
+    constexpr bool               operator!() const noexcept;
+    constexpr                    operator bool() const noexcept;
+
     [[nodiscard]] constexpr strv msg() const noexcept;
     [[nodiscard]] constexpr errc code() const noexcept;
 
-    [[nodiscard]] constexpr bool operator!() const noexcept;
-
-    [[nodiscard]] constexpr      operator bool() const noexcept;
-
 private:
-    errc c_;
     strv msg_;
+    errc c_;
 };
 
 // === impl ===
@@ -121,17 +125,17 @@ constexpr Err::Err() noexcept : c_{ errc::OK } {}
 
 constexpr Err::Err(errc c) noexcept : c_{ c } {}
 
-constexpr Err::Err(strv msg) noexcept : c_{ errc::FAIL }, msg_{ msg } {}
+constexpr Err::Err(strv msg) noexcept : msg_{ msg }, c_{ errc::FAIL } {}
 
-constexpr Err::Err(strv msg, errc c) noexcept : c_{ c }, msg_{ msg } {}
-
-constexpr strv Err::msg() const noexcept { return msg_; }
-
-constexpr errc Err::code() const noexcept { return c_; }
+constexpr Err::Err(strv msg, errc c) noexcept : msg_{ msg }, c_{ c } {}
 
 constexpr bool Err::operator!() const noexcept { return c_ == errc::OK; }
 
 constexpr Err::operator bool() const noexcept { return c_ != errc::OK; }
+
+constexpr strv Err::msg() const noexcept { return msg_; }
+
+constexpr errc Err::code() const noexcept { return c_; }
 
 } // namespace srr
 

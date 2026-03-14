@@ -26,7 +26,7 @@ inline namespace srr {
 // NOLINTBEGIN(readability-identifier-naming)
 
 template<typename T>
-concept CharFormattable                = impl::Formattable<char, T>;
+concept StrFmtable                     = impl::Fmtable<char, T>;
 
 // Format string
 template<typename... U> using fmt_str  = impl::Fmt<char, U...>;

@@ -36,14 +36,14 @@
         ::lm::unreach(::lm::Trace{ __FILE__, __LINE__ } __VA_OPT__(, )         \
                           __VA_ARGS__)
     #define LM_ASSERT(c, ...)                                                  \
-        ::lm::assert(::lm::Trace{ __FILE__, __LINE__ },                        \
-                     c,                                                        \
-                     #c __VA_OPT__(, ) __VA_ARGS__)
+        ::lm::runassert(::lm::Trace{ __FILE__, __LINE__ },                     \
+                        (c),                                                   \
+                        #c __VA_OPT__(, ) __VA_ARGS__)
 #else
 
     #define LM_DBG(...)     ((void) 0)
 
-    #define LM_ASSERT(...)  ::lm::assert(__VA_ARGS__)
+    #define LM_ASSERT(...)  ::lm::runassert(__VA_ARGS__)
     #define LM_UNREACH(...) ::lm::unreach(__VA_ARGS__)
     #define LM_PANIC(...)   ::lm::panic(__VA_ARGS__)
 #endif

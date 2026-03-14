@@ -48,6 +48,7 @@ srr_mem="src/srr/mem"
 
 lm_panic="src/lm/panic"
 
+ts_ctr="tests/ctr"
 ts_mem="tests/mem"
 
 ex_assert="examples/assert"
@@ -61,21 +62,23 @@ compile "$srr_mem"
 
 compile "$lm_panic"
 
+compile "$ts_ctr"
+compile "$ts_mem"
+
 compile "$ex_hello_world"
 compile "$ex_format"
 compile "$ex_assert"
 compile "$ex_logging"
 compile "$ex_result"
 
-compile "$ts_mem"
-
 lib "srr" "${srr_sys}.o" "${srr_mem}.o"
 lib "lm" "${lm_panic}.o"
+
+exe "$ts_ctr" "srr" "lm"
+exe "$ts_mem" "srr" "lm"
 
 exe "$ex_hello_world" "srr" "lm"
 exe "$ex_format" "srr" "lm"
 exe "$ex_assert" "srr" "lm"
 exe "$ex_logging" "srr" "lm"
 exe "$ex_result" "srr" "lm"
-
-exe "$ts_mem" "srr" "lm"

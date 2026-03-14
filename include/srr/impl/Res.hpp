@@ -27,7 +27,8 @@ public:
     constexpr Res &operator=(Res &&) noexcept      = delete;
 
     constexpr Res(Res &&r) noexcept;
-    constexpr Res(E err) noexcept;
+    constexpr Res(const E &err) noexcept;
+    constexpr Res(E &&err) noexcept;
     constexpr Res(const T &val) noexcept;
     constexpr Res(T &&val) noexcept;
     constexpr ~Res() noexcept;
@@ -72,7 +73,12 @@ constexpr Res<T, E>::Res(Res &&r) noexcept : ok_{ r.ok_ } {
 }
 
 template<typename T, typename E>
-constexpr Res<T, E>::Res(E err) noexcept : ok_{ false } {
+constexpr Res<T, E>::Res(const E &err) noexcept : ok_{ false } {
+    mem::build(&u_.err, err);
+}
+
+template<typename T, typename E>
+constexpr Res<T, E>::Res(E &&err) noexcept : ok_{ false } {
     mem::build(&u_.err, mv(err));
 }
 

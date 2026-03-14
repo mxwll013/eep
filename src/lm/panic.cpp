@@ -91,7 +91,7 @@ void unreach() noexcept {
     LM_EXIT(exitc::UNREACHABLE);
 }
 
-void assert(Trace &&t, bool c, strv s, strv msg) noexcept {
+void runassert(Trace &&t, bool c, strv s, strv msg) noexcept {
     if (c) return;
 
     LM_INFO("{} : {}", t.file, t.line);
@@ -100,7 +100,7 @@ void assert(Trace &&t, bool c, strv s, strv msg) noexcept {
     LM_EXIT(exitc::ASSERT);
 }
 
-void assert(Trace &&t, bool c, strv s) noexcept {
+void runassert(Trace &&t, bool c, strv s) noexcept {
     if (c) return;
 
     LM_INFO("{} : {}", t.file, t.line);
@@ -108,7 +108,7 @@ void assert(Trace &&t, bool c, strv s) noexcept {
     LM_EXIT(exitc::ASSERT);
 }
 
-void assert(bool c, strv s, strv msg) noexcept {
+void runassert(bool c, strv s, strv msg) noexcept {
     if (c) return;
 
     LM_INFO("{}", s);
@@ -116,7 +116,7 @@ void assert(bool c, strv s, strv msg) noexcept {
     LM_EXIT(exitc::ASSERT);
 }
 
-void assert(bool c, strv s) noexcept {
+void runassert(bool c, strv s) noexcept {
     if (c) return;
 
     LM_INFO("{}", s);

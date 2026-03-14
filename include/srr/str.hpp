@@ -37,7 +37,7 @@ inline namespace srr {
 // String (owning)
 using str                      = impl::Str<char>;
 
-// String view (mutable)
+// String buffer (mutable)
 using strb                     = impl::Span<char>;
 
 // String view (immutable)

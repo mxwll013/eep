@@ -28,27 +28,29 @@ void  operator delete(void *p, void *q) noexcept;
 inline namespace srr {
 namespace mem {
 
-template<typename T, typename... U> void build(T *ptr, U &&...args) noexcept;
-template<typename T> void                destroy(T *ptr) noexcept;
+template<typename T, typename... U>
+constexpr void                      build(T *ptr, U &&...args) noexcept;
+template<typename T> constexpr void destroy(T *ptr) noexcept;
 
 template<typename T>
-usize copye(T *dst, const T *src, usize d, usize s) noexcept;
+constexpr usize copye(T *dst, const T *src, usize d, usize s) noexcept;
 
-void  copy(void *dst, const void *src, usize n) noexcept;
-void  move(void *dst, const void *src, usize n) noexcept;
-void  set(void *dst, byte v, usize n) noexcept;
-void  zero(void *dst, usize n) noexcept;
+void            copy(void *dst, const void *src, usize n) noexcept;
+void            move(void *dst, const void *src, usize n) noexcept;
+void            set(void *dst, byte v, usize n) noexcept;
+void            zero(void *dst, usize n) noexcept;
 
 // === impl ===
 
-template<typename T, typename... U> void build(T *ptr, U &&...args) noexcept {
+template<typename T, typename... U>
+constexpr void build(T *ptr, U &&...args) noexcept {
     new (ptr) T{ fwd<U>(args)... };
 }
 
-template<typename T> void destroy(T *ptr) noexcept { ptr->~T(); }
+template<typename T> constexpr void destroy(T *ptr) noexcept { ptr->~T(); }
 
 template<typename T>
-usize copye(T *dst, const T *src, usize d, usize s) noexcept {
+constexpr usize copye(T *dst, const T *src, usize d, usize s) noexcept {
     const usize n = alg::min(d, s);
 
     if constexpr (is_triv_cp_v<T>)

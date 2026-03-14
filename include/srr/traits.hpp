@@ -20,10 +20,10 @@ inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-template<bool B> struct bool_constant;
+template<bool B> struct bool_k;
 
-using true_t  = bool_constant<true>;
-using false_t = bool_constant<false>;
+using true_t  = bool_k<true>;
+using false_t = bool_k<false>;
 
 template<typename T, typename U> struct is_same;
 template<typename T> struct no_deduce;
@@ -69,7 +69,7 @@ template<typename T> constexpr rm_ref_t<T> &&mv(T &&t) noexcept;
 
 // === impl ===
 
-template<bool B> struct bool_constant {
+template<bool B> struct bool_k {
     static constexpr bool val = B;
 };
 
@@ -166,8 +166,7 @@ template<typename T> constexpr T &&fwd(rm_ref_t<T> &t) noexcept {
 }
 
 template<typename T> constexpr T &&fwd(rm_ref_t<T> &&t) noexcept {
-    static_assert(!is_lvalue_ref_v<T>,
-                  "lvalue reference cannot be forwarded as rvalue");
+    static_assert(!is_lvalue_ref_v<T>);
     return static_cast<T &&>(t);
 }
 

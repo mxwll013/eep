@@ -42,7 +42,7 @@ template<> inline constexpr strv TYPE_STR<Type::ERR>  = SRR_RED("Err") ": ";
 template<> inline constexpr strv TYPE_STR<Type::PAN>  = SRR_RED("Panic") ": ";
 
 template<Type T, typename... U>
-    requires(CharFormattable<U> && ...)
+    requires(StrFmtable<U> && ...)
 void log(const fmt_str<no_deduce_t<U>...> &fmt, U &&...args) {
     const strb buf  = impl::fmt_buf;
 
