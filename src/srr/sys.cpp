@@ -17,20 +17,40 @@
 #include "srr/str.hpp"
 #include "srr/types.hpp"
 
+#include <sys/mman.h>
 #include <unistd.h>
 
 inline namespace srr {
 namespace sys {
 
-void exit(exitc c) noexcept { ::_exit(static_cast<int>(c)); }
-
-err  write(sink s, strv v) noexcept {
+err write(sink s, strv v) noexcept {
     const isize w = ::write(static_cast<int>(s), v.data(), v.len());
 
     if (w < 0) return errc::SYS_WRITE_FAIL;
 
     return {};
 }
+
+void *mmap(usize len) noexcept {
+    const usize pages = (len + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
+
+    return ::mmap(nullptr,
+                  pages,
+                  PROT_READ | PROT_WRITE,
+                  MAP_ANONYMOUS | MAP_PRIVATE,
+                  -1,
+                  0);
+}
+
+err munmap(void *ptr, usize len) noexcept {
+    const int r = ::munmap(ptr, len);
+
+    if (r < 0) return errc::SYS_MUNMAP_FAIL;
+
+    return {};
+}
+
+void exit(exitc c) noexcept { ::_exit(static_cast<int>(c)); }
 
 } // namespace sys
 } // namespace srr

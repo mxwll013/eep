@@ -67,6 +67,19 @@ constexpr f64   MAX_F64   = __DBL_MAX__;
 constexpr f32   MIN_F32   = __FLT_MIN__;
 constexpr f64   MIN_F64   = __DBL_MIN__;
 
+consteval i8    operator""_i8(ull v) noexcept;
+consteval i16   operator""_i16(ull v) noexcept;
+consteval i32   operator""_i32(ull v) noexcept;
+consteval i64   operator""_i64(ull v) noexcept;
+consteval isize operator""_isz(ull v) noexcept;
+consteval u8    operator""_u8(ull v) noexcept;
+consteval u16   operator""_u16(ull v) noexcept;
+consteval u32   operator""_u32(ull v) noexcept;
+consteval u64   operator""_u64(ull v) noexcept;
+consteval usize operator""_usz(ull v) noexcept;
+
+// === impl ===
+
 consteval i8    operator""_i8(ull v) noexcept { return static_cast<i8>(v); }
 
 consteval i16   operator""_i16(ull v) noexcept { return static_cast<i16>(v); }
@@ -75,6 +88,8 @@ consteval i32   operator""_i32(ull v) noexcept { return static_cast<i32>(v); }
 
 consteval i64   operator""_i64(ull v) noexcept { return static_cast<i64>(v); }
 
+consteval isize operator""_isz(ull v) noexcept { return static_cast<isize>(v); }
+
 consteval u8    operator""_u8(ull v) noexcept { return static_cast<u8>(v); }
 
 consteval u16   operator""_u16(ull v) noexcept { return static_cast<u16>(v); }
@@ -82,6 +97,8 @@ consteval u16   operator""_u16(ull v) noexcept { return static_cast<u16>(v); }
 consteval u32   operator""_u32(ull v) noexcept { return static_cast<u32>(v); }
 
 consteval u64   operator""_u64(ull v) noexcept { return static_cast<u64>(v); }
+
+consteval usize operator""_usz(ull v) noexcept { return static_cast<usize>(v); }
 
 } // namespace srr
 

@@ -21,20 +21,29 @@
 inline namespace srr {
 namespace sys {
 
+struct Conf;
+
 // NOLINTBEGIN(readability-identifier-naming)
 
 // Sink (output stream)
-using sink             = u8;
+using sink                    = u32;
+using conf                    = Conf;
+
 
 // NOLINTEND(readability-identifier-naming)
 
-constexpr sink    CIN  = 0;
-constexpr sink    COUT = 1;
-constexpr sink    CERR = 2;
+constexpr sink      CIN       = 0;
+constexpr sink      COUT      = 1;
+constexpr sink      CERR      = 2;
 
-[[noreturn]] void exit(exitc c) noexcept;
+constexpr usize     PAGE_SIZE = 4096;
 
-err               write(sink s, strv v) noexcept;
+err                 write(sink s, strv v) noexcept;
+
+[[nodiscard]] void *mmap(usize len) noexcept;
+err                 munmap(void *ptr, usize len) noexcept;
+
+[[noreturn]] void   exit(exitc c) noexcept;
 
 } // namespace sys
 } // namespace srr

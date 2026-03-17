@@ -67,29 +67,29 @@ private:
 template<typename T, typename E>
 constexpr Res<T, E>::Res(Res &&r) noexcept : ok_{ r.ok_ } {
     if (ok_)
-        mem::build(&u_.val, mv(r.u_.val));
+        mem::construct(&u_.val, mv(r.u_.val));
     else
-        mem::build(&u_.err, mv(r.u_.err));
+        mem::construct(&u_.err, mv(r.u_.err));
 }
 
 template<typename T, typename E>
 constexpr Res<T, E>::Res(const E &err) noexcept : ok_{ false } {
-    mem::build(&u_.err, err);
+    mem::construct(&u_.err, err);
 }
 
 template<typename T, typename E>
 constexpr Res<T, E>::Res(E &&err) noexcept : ok_{ false } {
-    mem::build(&u_.err, mv(err));
+    mem::construct(&u_.err, mv(err));
 }
 
 template<typename T, typename E>
 constexpr Res<T, E>::Res(const T &val) noexcept : ok_{ true } {
-    mem::build(&u_.val, val);
+    mem::construct(&u_.val, val);
 }
 
 template<typename T, typename E>
 constexpr Res<T, E>::Res(T &&val) noexcept : ok_{ true } {
-    mem::build(&u_.val, mv(val));
+    mem::construct(&u_.val, mv(val));
 }
 
 template<typename T, typename E> constexpr Res<T, E>::~Res() noexcept {

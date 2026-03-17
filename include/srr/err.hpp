@@ -58,6 +58,7 @@ enum class Errc : u8 {
     INVALID_ARG,
 
     SYS_WRITE_FAIL,
+    SYS_MUNMAP_FAIL,
 
     ERRC_COUNT,
 };
@@ -94,12 +95,7 @@ static constexpr arr<strv, EXITC_COUNT> STR_EXITC = {
 };
 
 static constexpr arr<strv, ERRC_COUNT> STR_ERRC = {
-    "Ok",
-    "Fail",
-
-    "Invalid argument.",
-
-    "Failed on write.",
+    "Ok", "Fail", "Invalid argument.", "Failed on write.", "Failed on unmap.",
 };
 
 static constexpr arr<exitc, ERRC_COUNT> CAST_ERRC = {
@@ -109,6 +105,7 @@ static constexpr arr<exitc, ERRC_COUNT> CAST_ERRC = {
     Exitc::FAIL, // errc::INVALID_ARG
 
     Exitc::SYS,  // errc::SYS_WRITE_FAIL
+    Exitc::SYS,  // errc::SYS_MUNMAP_FAIL
 };
 
 constexpr strv msg(exitc c) noexcept {

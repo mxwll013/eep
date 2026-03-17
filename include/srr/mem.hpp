@@ -14,13 +14,11 @@
 #ifndef SRR_MEM_HPP_
 #define SRR_MEM_HPP_
 
+#include "srr/impl/Alloc.hpp"
+
 #include "srr/alg.hpp"
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
-
-#define SRR_KB(...) (1024 * (__VA_ARGS__))
-#define SRR_MB(...) (1024 * SRR_KB(__VA_ARGS__))
-#define SRR_GB(...) (1024 * SRR_MB(__VA_ARGS__))
 
 void *operator new(usize n, void *p) noexcept;
 void  operator delete(void *p, void *q) noexcept;
@@ -28,26 +26,58 @@ void  operator delete(void *p, void *q) noexcept;
 inline namespace srr {
 namespace mem {
 
-template<typename T, typename... U>
-constexpr void                      build(T *ptr, U &&...args) noexcept;
+// NOLINTBEGIN(readability-identifier-naming)
+
+template<typename A>
+concept Alloc                         = impl::Alloc<A>;
+
+using sys_alloc                       = impl::SysAlloc;
+
+template<typename T> using base_alloc = impl::BaseAlloc<T>;
+
+// NOLINTEND(readability-identifier-naming)
+
+template<typename T> T             *alloc(usize n) noexcept;
+template<typename T> T             *alloc() noexcept;
+template<typename T> void           dealloc(T *ptr, usize n) noexcept;
+template<typename T> void           dealloc(T *ptr) noexcept;
+
 template<typename T> constexpr void destroy(T *ptr) noexcept;
+template<typename T, typename... U>
+constexpr void construct(T *ptr, U &&...args) noexcept;
 
 template<typename T>
-constexpr usize copye(T *dst, const T *src, usize d, usize s) noexcept;
+constexpr usize         copye(T *dst, const T *src, usize d, usize s) noexcept;
 
-void            copy(void *dst, const void *src, usize n) noexcept;
-void            move(void *dst, const void *src, usize n) noexcept;
-void            set(void *dst, byte v, usize n) noexcept;
-void            zero(void *dst, usize n) noexcept;
+void                    copy(void *dst, const void *src, usize n) noexcept;
+void                    move(void *dst, const void *src, usize n) noexcept;
+void                    set(void *dst, byte v, usize n) noexcept;
+void                    zero(void *dst, usize n) noexcept;
 
 // === impl ===
 
-template<typename T, typename... U>
-constexpr void build(T *ptr, U &&...args) noexcept {
-    new (ptr) T{ fwd<U>(args)... };
+template<typename T> T *alloc(usize n) noexcept {
+    return static_cast<T *>(sys_alloc::alloc(sizeof(T) * n));
+}
+
+template<typename T> T *alloc() noexcept {
+    return static_cast<T *>(sys_alloc::alloc(sizeof(T)));
+}
+
+template<typename T> void dealloc(T *ptr, usize n) noexcept {
+    sys_alloc::dealloc(ptr, sizeof(T) * n);
+}
+
+template<typename T> void dealloc(T *ptr) noexcept {
+    sys_alloc::dealloc(ptr, sizeof(T));
 }
 
 template<typename T> constexpr void destroy(T *ptr) noexcept { ptr->~T(); }
+
+template<typename T, typename... U>
+constexpr void construct(T *ptr, U &&...args) noexcept {
+    new (ptr) T{ fwd<U>(args)... };
+}
 
 template<typename T>
 constexpr usize copye(T *dst, const T *src, usize d, usize s) noexcept {
@@ -56,7 +86,7 @@ constexpr usize copye(T *dst, const T *src, usize d, usize s) noexcept {
     if constexpr (is_triv_cp_v<T>)
         copy(dst, src, n * sizeof(T));
     else
-        for (usize i = 0; i < n; ++i) build(dst + i, src[i]);
+        for (usize i = 0; i < n; ++i) construct(dst + i, src[i]);
 
     return n;
 }

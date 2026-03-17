@@ -22,30 +22,33 @@ namespace impl {
 
 template<typename T> class Span {
 public:
+    // NOLINTNEXTLINE(readability-identifier-naming)
+    using val_t = T;
+
     constexpr Span() noexcept;
     constexpr Span(T *p) noexcept;
     constexpr Span(T *p, usize n) noexcept;
     template<usize N> constexpr Span(T (&arr)[N + 1]) noexcept;
 
-    constexpr                        operator Span<const T>() const noexcept;
+    constexpr                       operator Span<const T>() const noexcept;
 
-    [[nodiscard]] constexpr usize    len() const noexcept;
-    [[nodiscard]] constexpr bool     empty() const noexcept;
+    [[nodiscard]] constexpr usize   len() const noexcept;
+    [[nodiscard]] constexpr bool    empty() const noexcept;
 
-    [[nodiscard]] constexpr T       &operator[](usize i) const noexcept;
-    [[nodiscard]] constexpr T       &front() const noexcept;
-    [[nodiscard]] constexpr T       &back() const noexcept;
+    [[nodiscard]] constexpr T      &operator[](usize i) const noexcept;
+    [[nodiscard]] constexpr T      &front() const noexcept;
+    [[nodiscard]] constexpr T      &back() const noexcept;
 
-    [[nodiscard]] constexpr const T *data() const noexcept;
-    [[nodiscard]] constexpr const T *begin() const noexcept;
-    [[nodiscard]] constexpr const T *end() const noexcept;
+    [[nodiscard]] constexpr T      *data() const noexcept;
+    [[nodiscard]] constexpr T      *begin() const noexcept;
+    [[nodiscard]] constexpr T      *end() const noexcept;
 
-    [[nodiscard]] constexpr usize    copy(Span<const T> src) const noexcept;
+    [[nodiscard]] constexpr usize   copy(Span<const T> src) const noexcept;
 
-    [[nodiscard]] constexpr Span<T>  head(usize n) const noexcept;
-    [[nodiscard]] constexpr Span<T>  tail(usize n) const noexcept;
-    [[nodiscard]] constexpr Span<T>  span(usize s) const noexcept;
-    [[nodiscard]] constexpr Span<T>  span(usize s, usize e) const noexcept;
+    [[nodiscard]] constexpr Span<T> head(usize n) const noexcept;
+    [[nodiscard]] constexpr Span<T> tail(usize n) const noexcept;
+    [[nodiscard]] constexpr Span<T> span(usize s) const noexcept;
+    [[nodiscard]] constexpr Span<T> span(usize s, usize e) const noexcept;
 
 private:
     T    *p_;
@@ -94,15 +97,11 @@ template<typename T> constexpr T &Span<T>::back() const noexcept {
     return p_[len_ - 1];
 }
 
-template<typename T> constexpr const T *Span<T>::data() const noexcept {
-    return p_;
-}
+template<typename T> constexpr T *Span<T>::data() const noexcept { return p_; }
 
-template<typename T> constexpr const T *Span<T>::begin() const noexcept {
-    return p_;
-}
+template<typename T> constexpr T *Span<T>::begin() const noexcept { return p_; }
 
-template<typename T> constexpr const T *Span<T>::end() const noexcept {
+template<typename T> constexpr T *Span<T>::end() const noexcept {
     return p_ + len_;
 }
 

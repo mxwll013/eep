@@ -25,6 +25,9 @@ namespace impl {
 
 template<typename T, usize N> class Arr {
 public:
+    // NOLINTNEXTLINE(readability-identifier-naming)
+    using val_t = T;
+
     consteval Arr() noexcept;
     consteval Arr(const T (&arr)[N + 1]) noexcept;
     template<typename... U> constexpr Arr(U &&...args) noexcept;

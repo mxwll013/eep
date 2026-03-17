@@ -43,6 +43,7 @@ exe() {
 mkdir -p build/obj
 
 
+srr_impl_alloc="src/srr/impl/Alloc"
 srr_sys="src/srr/sys"
 srr_mem="src/srr/mem"
 
@@ -51,12 +52,14 @@ lm_panic="src/lm/panic"
 ts_ctr="tests/ctr"
 ts_mem="tests/mem"
 
+ex_alloc="examples/alloc"
 ex_assert="examples/assert"
 ex_format="examples/format"
 ex_hello_world="examples/hello_world"
 ex_logging="examples/logging"
 ex_result="examples/result"
 
+compile "$srr_impl_alloc"
 compile "$srr_sys"
 compile "$srr_mem"
 
@@ -65,20 +68,22 @@ compile "$lm_panic"
 compile "$ts_ctr"
 compile "$ts_mem"
 
-compile "$ex_hello_world"
-compile "$ex_format"
+compile "$ex_alloc"
 compile "$ex_assert"
+compile "$ex_format"
+compile "$ex_hello_world"
 compile "$ex_logging"
 compile "$ex_result"
 
-lib "srr" "${srr_sys}.o" "${srr_mem}.o"
+lib "srr" "${srr_sys}.o" "${srr_mem}.o" "${srr_impl_alloc}.o"
 lib "lm" "${lm_panic}.o"
 
 exe "$ts_ctr" "srr" "lm"
 exe "$ts_mem" "srr" "lm"
 
-exe "$ex_hello_world" "srr" "lm"
-exe "$ex_format" "srr" "lm"
+exe "$ex_alloc" "srr" "lm"
 exe "$ex_assert" "srr" "lm"
+exe "$ex_format" "srr" "lm"
+exe "$ex_hello_world" "srr" "lm"
 exe "$ex_logging" "srr" "lm"
 exe "$ex_result" "srr" "lm"
