@@ -15,13 +15,19 @@
 #define SRR_CTR_HPP_
 
 #include "srr/impl/Arr.hpp"
+#include "srr/impl/List.hpp"
 #include "srr/impl/Span.hpp"
 
+#include "srr/mem.hpp"
 #include "srr/types.hpp"
 
 inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
+
+// Dynamic array (owning)
+template<typename T, mem::Alloc A = mem::base_alloc<T>>
+using list                              = impl::List<T, A>;
 
 // Array (fixed-size, owning)
 template<typename T, usize N> using arr = impl::Arr<T, N>;

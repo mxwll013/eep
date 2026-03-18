@@ -40,10 +40,10 @@ public:
 
     [[nodiscard]] constexpr const T &operator[](usize i) const noexcept;
     [[nodiscard]] constexpr T       &operator[](usize i) noexcept;
-    [[nodiscard]] constexpr const T &front() const noexcept;
-    [[nodiscard]] constexpr T       &front() noexcept;
-    [[nodiscard]] constexpr const T &back() const noexcept;
-    [[nodiscard]] constexpr T       &back() noexcept;
+    [[nodiscard]] constexpr const T &first() const noexcept;
+    [[nodiscard]] constexpr T       &first() noexcept;
+    [[nodiscard]] constexpr const T &last() const noexcept;
+    [[nodiscard]] constexpr T       &last() noexcept;
 
     [[nodiscard]] constexpr const T *data() const noexcept;
     [[nodiscard]] constexpr T       *data() noexcept;
@@ -114,21 +114,21 @@ constexpr const T &Arr<T, N>::operator[](usize i) const noexcept {
     return arr_[i];
 }
 
-template<typename T, usize N> constexpr T &Arr<T, N>::front() noexcept {
+template<typename T, usize N> constexpr T &Arr<T, N>::first() noexcept {
     return arr_[0];
 }
 
 template<typename T, usize N>
-constexpr const T &Arr<T, N>::front() const noexcept {
+constexpr const T &Arr<T, N>::first() const noexcept {
     return arr_[0];
 }
 
-template<typename T, usize N> constexpr T &Arr<T, N>::back() noexcept {
+template<typename T, usize N> constexpr T &Arr<T, N>::last() noexcept {
     return arr_[N - 1];
 }
 
 template<typename T, usize N>
-constexpr const T &Arr<T, N>::back() const noexcept {
+constexpr const T &Arr<T, N>::last() const noexcept {
     return arr_[N - 1];
 }
 

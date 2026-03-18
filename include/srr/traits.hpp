@@ -52,6 +52,7 @@ template<typename T> struct rm_cv;
 template<typename T> struct make_unsigned;
 
 template<typename T> struct val;
+template<typename T> struct alloc;
 template<typename T> struct ptr;
 template<typename T> struct arr_ptr;
 
@@ -68,6 +69,7 @@ template<typename T> using rm_cv_t         = typename rm_cv<T>::type;
 template<typename T> using make_unsigned_t = typename make_unsigned<T>::type;
 
 template<typename T> using val_t           = typename val<T>::type;
+template<typename T> using alloc_t         = typename alloc<T>::type;
 template<typename T> using ptr_t           = typename ptr<T>::type;
 template<typename T> using arr_ptr_t       = typename arr_ptr<T>::type;
 
@@ -260,6 +262,10 @@ template<typename T> struct rm_cv {
 
 template<typename T> struct val {
     using type = T::val_t;
+};
+
+template<typename T> struct alloc {
+    using type = T::alloc_t;
 };
 
 template<typename T> struct ptr {

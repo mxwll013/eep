@@ -36,8 +36,8 @@ public:
     [[nodiscard]] constexpr bool    empty() const noexcept;
 
     [[nodiscard]] constexpr T      &operator[](usize i) const noexcept;
-    [[nodiscard]] constexpr T      &front() const noexcept;
-    [[nodiscard]] constexpr T      &back() const noexcept;
+    [[nodiscard]] constexpr T      &first() const noexcept;
+    [[nodiscard]] constexpr T      &last() const noexcept;
 
     [[nodiscard]] constexpr T      *data() const noexcept;
     [[nodiscard]] constexpr T      *begin() const noexcept;
@@ -89,11 +89,11 @@ template<typename T> constexpr T &Span<T>::operator[](usize i) const noexcept {
     return p_[i];
 }
 
-template<typename T> constexpr T &Span<T>::front() const noexcept {
+template<typename T> constexpr T &Span<T>::first() const noexcept {
     return p_[0];
 }
 
-template<typename T> constexpr T &Span<T>::back() const noexcept {
+template<typename T> constexpr T &Span<T>::last() const noexcept {
     return p_[len_ - 1];
 }
 
