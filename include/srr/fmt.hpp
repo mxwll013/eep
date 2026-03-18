@@ -44,46 +44,42 @@ static constexpr fx_str<200> DIGIT_LUT = "00010203040506070809"
                                          "80818283848586878889"
                                          "90919293949596979899";
 
-constexpr usize fmt(const strb &buf, [[maybe_unused]] nil v) noexcept {
+constexpr usz fmt(const strb &buf, [[maybe_unused]] nil v) noexcept {
     return buf.copy("nullptr");
 }
 
-constexpr usize fmt(const strb &buf, bool v) noexcept {
+constexpr usz fmt(const strb &buf, bool v) noexcept {
     const strv s = v ? "true" : "false";
     return buf.copy(s);
 }
 
-constexpr usize fmt(const strb &buf, char v) noexcept {
+constexpr usz fmt(const strb &buf, char v) noexcept {
     buf[0] = v;
     return 1;
 }
 
-// constexpr usize fmt(const strb &buf, f32 v) noexcept;
-// constexpr usize fmt(const strb &buf, f64 v) noexcept;
+// constexpr usz fmt(const strb &buf, f32 v) noexcept;
+// constexpr usz fmt(const strb &buf, f64 v) noexcept;
 
-constexpr usize fmt(const strb &buf, exitc v) noexcept {
+constexpr usz fmt(const strb &buf, exitc v) noexcept {
     return buf.copy(msg(v));
 }
 
-constexpr usize fmt(const strb &buf, errc v) noexcept {
-    return buf.copy(msg(v));
-}
+constexpr usz fmt(const strb &buf, errc v) noexcept { return buf.copy(msg(v)); }
 
-constexpr usize fmt(const strb &buf, err v) noexcept {
-    return buf.copy(v.msg());
-}
+constexpr usz fmt(const strb &buf, err v) noexcept { return buf.copy(v.msg()); }
 
-template<usize N>
-constexpr usize fmt(const strb &buf, const char (&v)[N]) noexcept {
+template<usz N>
+constexpr usz fmt(const strb &buf, const char (&v)[N]) noexcept {
     return buf.copy(v);
 }
 
-constexpr usize fmt(const strb &buf, strv v) noexcept { return buf.copy(v); }
+constexpr usz fmt(const strb &buf, strv v) noexcept { return buf.copy(v); }
 
-template<Int I> constexpr usize fmt(const strb &buf, I v) noexcept {
+template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept {
     using U = make_unsigned_t<I>;
-    U     u;
-    usize i = 0;
+    U   u;
+    usz i = 0;
 
     if constexpr (is_signed_v<I>) {
         if (v < 0) {
@@ -101,19 +97,19 @@ template<Int I> constexpr usize fmt(const strb &buf, I v) noexcept {
     char      *p = rev.end();
 
     while (u >= 100) {
-        usize idx  = (u % 100) * 2;
-        u         /= 100;
+        usz idx  = (u % 100) * 2;
+        u       /= 100;
 
-        *--p       = DIGIT_LUT[idx + 1];
-        *--p       = DIGIT_LUT[idx];
+        *--p     = DIGIT_LUT[idx + 1];
+        *--p     = DIGIT_LUT[idx];
     }
 
     if (u < 10) {
         *--p = static_cast<char>(u + '0');
     } else {
-        usize idx = u * 2;
-        *--p      = DIGIT_LUT[idx + 1];
-        *--p      = DIGIT_LUT[idx];
+        usz idx = u * 2;
+        *--p    = DIGIT_LUT[idx + 1];
+        *--p    = DIGIT_LUT[idx];
     }
 
     for (; p < rev.end(); ++p) buf[i++] = *p;

@@ -24,61 +24,60 @@
 
 inline namespace srr {
 
-constexpr usize fmt(const strb &buf, nil v) noexcept;
-constexpr usize fmt(const strb &buf, bool v) noexcept;
-constexpr usize fmt(const strb &buf, char v) noexcept;
+constexpr usz                 fmt(const strb &buf, nil v) noexcept;
+constexpr usz                 fmt(const strb &buf, bool v) noexcept;
+constexpr usz                 fmt(const strb &buf, char v) noexcept;
 
-// constexpr usize fmt(const strb &buf, f32 v) noexcept;
-// constexpr usize fmt(const strb &buf, f64 v) noexcept;
+// constexpr usz fmt(const strb &buf, f32 v) noexcept;
+// constexpr usz fmt(const strb &buf, f64 v) noexcept;
 
-constexpr usize fmt(const strb &buf, exitc v) noexcept;
-constexpr usize fmt(const strb &buf, errc v) noexcept;
-constexpr usize fmt(const strb &buf, err v) noexcept;
+constexpr usz                 fmt(const strb &buf, exitc v) noexcept;
+constexpr usz                 fmt(const strb &buf, errc v) noexcept;
+constexpr usz                 fmt(const strb &buf, err v) noexcept;
 
-template<usize N>
-constexpr usize fmt(const strb &buf, const char (&v)[N]) noexcept;
-constexpr usize fmt(const strb &buf, strv v) noexcept;
+template<usz N> constexpr usz fmt(const strb &buf, const char (&v)[N]) noexcept;
+constexpr usz                 fmt(const strb &buf, strv v) noexcept;
 
-template<Int I> constexpr usize fmt(const strb &buf, I v) noexcept;
+template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept;
 
 namespace impl {
 
 template<typename T, typename U>
 concept Fmtable = requires(const Span<T> &buf, const U &u) {
-    { fmt(buf, u) } noexcept -> Same<usize>;
+    { fmt(buf, u) } noexcept -> Same<usz>;
 };
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
 class Fmt {
 public:
-    template<usize M> consteval Fmt(const T (&p)[M]) noexcept;
+    template<usz M> consteval Fmt(const T (&p)[M]) noexcept;
 
-    [[nodiscard]] constexpr usize apply(Span<T> buf,
-                                        const U &...args) const noexcept;
+    [[nodiscard]] constexpr usz apply(Span<T> buf,
+                                      const U &...args) const noexcept;
 
 private:
-    static constexpr usize  N = sizeof...(U);
+    static constexpr usz  N = sizeof...(U);
 
-    Span<const T>           str_{};
-    Arr<usize, (N + 1) * 2> segs_{};
+    Span<const T>         str_{};
+    Arr<usz, (N + 1) * 2> segs_{};
 
-    consteval void          parse();
+    consteval void        parse();
 
-    constexpr usize         build(Span<T> buf, usize seg) const noexcept;
+    constexpr usz         build(Span<T> buf, usz seg) const noexcept;
 
     template<typename V, typename... W>
-    constexpr usize build(Span<T>  buf,
-                          usize    seg,
-                          const V &arg,
-                          const W &...args) const noexcept;
+    constexpr usz build(Span<T>  buf,
+                        usz      seg,
+                        const V &arg,
+                        const W &...args) const noexcept;
 };
 
 // === impl ===
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
-template<usize M>
+template<usz M>
 // NOLINTNEXTLINE(bugprone-exception-escape)
 consteval Fmt<T, U...>::Fmt(const T (&p)[M]) noexcept : str_{ p, M-1 } {
     parse();
@@ -86,18 +85,18 @@ consteval Fmt<T, U...>::Fmt(const T (&p)[M]) noexcept : str_{ p, M-1 } {
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
-constexpr usize Fmt<T, U...>::apply(Span<T> buf,
-                                    const U &...args) const noexcept {
+constexpr usz Fmt<T, U...>::apply(Span<T> buf,
+                                  const U &...args) const noexcept {
     return build(buf, 0, args...);
 }
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
 consteval void Fmt<T, U...>::parse() {
-    usize n  = 0;
+    usz n    = 0;
     segs_[0] = 0;
 
-    for (usize i = 0; i < str_.len(); i++) {
+    for (usz i = 0; i < str_.len(); i++) {
         if (str_[i] == '}') throw "Unmatched '}' in format string!";
         if (str_[i] != '{') continue;
         ++i;
@@ -124,9 +123,9 @@ consteval void Fmt<T, U...>::parse() {
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
-constexpr usize Fmt<T, U...>::build(Span<T> buf, usize seg) const noexcept {
-    usize s = segs_[seg * 2];
-    usize e = segs_[(seg * 2) + 1];
+constexpr usz Fmt<T, U...>::build(Span<T> buf, usz seg) const noexcept {
+    usz s = segs_[seg * 2];
+    usz e = segs_[(seg * 2) + 1];
 
     return buf.copy(str_.span(s, e));
 }
@@ -134,12 +133,12 @@ constexpr usize Fmt<T, U...>::build(Span<T> buf, usize seg) const noexcept {
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
 template<typename V, typename... W>
-constexpr usize Fmt<T, U...>::build(Span<T>  buf,
-                                    usize    seg,
-                                    const V &arg,
-                                    const W &...args) const noexcept {
-    usize n  = build(buf, seg);
-    n       += fmt(buf.span(n), arg);
+constexpr usz Fmt<T, U...>::build(Span<T>  buf,
+                                  usz      seg,
+                                  const V &arg,
+                                  const W &...args) const noexcept {
+    usz n  = build(buf, seg);
+    n     += fmt(buf.span(n), arg);
     return n + build(buf.span(n), seg + 1, args...);
 }
 

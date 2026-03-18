@@ -29,7 +29,7 @@ using false_t = bool_k<false>;
 template<bool C, typename T, typename U> struct if_;
 
 template<typename T, typename U> struct is_same;
-template<usize N, typename... U> struct is_len;
+template<usz N, typename... U> struct is_len;
 
 template<typename T> struct is_triv_cp;
 template<typename T> struct is_triv_ds;
@@ -78,7 +78,7 @@ template<bool C, typename T, typename U>
 using if_t = typename if_<C, T, U>::type;
 
 template<typename T, typename U> constexpr bool is_same_v = is_same<T, U>::val;
-template<usize N, typename... U> constexpr bool is_len_v = is_len<N, U...>::val;
+template<usz N, typename... U> constexpr bool   is_len_v = is_len<N, U...>::val;
 
 template<typename T> constexpr bool is_triv_cp_v         = is_triv_cp<T>::val;
 template<typename T> constexpr bool is_triv_ds_v         = is_triv_ds<T>::val;
@@ -160,7 +160,7 @@ template<> struct is_int<i32> : true_t {};
 
 template<> struct is_int<i64> : true_t {};
 
-template<> struct is_int<isize> : true_t {};
+template<> struct is_int<isz> : true_t {};
 
 template<> struct is_int<u8> : true_t {};
 
@@ -170,7 +170,7 @@ template<> struct is_int<u32> : true_t {};
 
 template<> struct is_int<u64> : true_t {};
 
-template<> struct is_int<usize> : true_t {};
+template<> struct is_int<usz> : true_t {};
 
 template<typename> struct is_signed : false_t {};
 
@@ -182,7 +182,7 @@ template<> struct is_signed<i32> : true_t {};
 
 template<> struct is_signed<i64> : true_t {};
 
-template<> struct is_signed<isize> : true_t {};
+template<> struct is_signed<isz> : true_t {};
 
 template<typename T> struct is_lvalue_ref {
     static constexpr bool val = false;
@@ -196,7 +196,7 @@ template<typename T> struct is_arr : false_t {};
 
 template<typename T> struct is_arr<T[]> : true_t {};
 
-template<typename T, usize N> struct is_arr<T[N]> : true_t {};
+template<typename T, usz N> struct is_arr<T[N]> : true_t {};
 
 template<typename T> struct is_fn : false_t {};
 
@@ -242,7 +242,7 @@ template<typename T> struct rm_ext<T[]> {
     using type = T;
 };
 
-template<typename T, usize N> struct rm_ext<T[N]> {
+template<typename T, usz N> struct rm_ext<T[N]> {
     using type = T;
 };
 
@@ -282,7 +282,7 @@ template<typename T> struct arr_ptr {
     using type = rm_ext_t<T> *;
 };
 
-template<usize N, typename... U> struct is_len {
+template<usz N, typename... U> struct is_len {
     static constexpr bool val = sizeof...(U) == N;
 };
 

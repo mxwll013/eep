@@ -20,7 +20,7 @@
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
 
-void *operator new(usize n, void *p) noexcept;
+void *operator new(usz n, void *p) noexcept;
 void  operator delete(void *p, void *q) noexcept;
 
 inline namespace srr {
@@ -37,9 +37,9 @@ template<typename T> using base_alloc = impl::BaseAlloc<T>;
 
 // NOLINTEND(readability-identifier-naming)
 
-template<typename T> T             *alloc(usize n) noexcept;
+template<typename T> T             *alloc(usz n) noexcept;
 template<typename T> T             *alloc() noexcept;
-template<typename T> void           dealloc(T *ptr, usize n) noexcept;
+template<typename T> void           dealloc(T *ptr, usz n) noexcept;
 template<typename T> void           dealloc(T *ptr) noexcept;
 
 template<typename T> constexpr void destroy(T *ptr) noexcept;
@@ -47,25 +47,25 @@ template<typename T, typename... U>
 constexpr void construct(T *ptr, U &&...args) noexcept;
 
 template<typename T>
-constexpr bool cmpe(const T *dst, const T *src, usize n) noexcept;
+constexpr bool cmpe(const T *dst, const T *src, usz n) noexcept;
 
 template<typename T>
-constexpr usize copye(T *dst, const T *src, usize d, usize s) noexcept;
+constexpr usz copye(T *dst, const T *src, usz d, usz s) noexcept;
 
 template<typename T>
-constexpr usize movee(T *dst, const T *src, usize d, usize s) noexcept;
+constexpr usz movee(T *dst, const T *src, usz d, usz s) noexcept;
 
-template<typename T> constexpr void clse(T *dst, usize n) noexcept;
+template<typename T> constexpr void clse(T *dst, usz n) noexcept;
 
-bool                    eq(const void *a, const void *b, usize n) noexcept;
-void                    copy(void *dst, const void *src, usize n) noexcept;
-void                    move(void *dst, const void *src, usize n) noexcept;
-void                    set(void *dst, byte v, usize n) noexcept;
-void                    zero(void *dst, usize n) noexcept;
+bool                    eq(const void *a, const void *b, usz n) noexcept;
+void                    copy(void *dst, const void *src, usz n) noexcept;
+void                    move(void *dst, const void *src, usz n) noexcept;
+void                    set(void *dst, byte v, usz n) noexcept;
+void                    zero(void *dst, usz n) noexcept;
 
 // === impl ===
 
-template<typename T> T *alloc(usize n) noexcept {
+template<typename T> T *alloc(usz n) noexcept {
     return static_cast<T *>(sys_alloc::alloc(sizeof(T) * n));
 }
 
@@ -73,7 +73,7 @@ template<typename T> T *alloc() noexcept {
     return static_cast<T *>(sys_alloc::alloc(sizeof(T)));
 }
 
-template<typename T> void dealloc(T *ptr, usize n) noexcept {
+template<typename T> void dealloc(T *ptr, usz n) noexcept {
     sys_alloc::dealloc(ptr, sizeof(T) * n);
 }
 
@@ -89,44 +89,44 @@ constexpr void construct(T *ptr, U &&...args) noexcept {
 }
 
 template<typename T>
-constexpr bool cmpe(const T *dst, const T *src, usize n) noexcept {
+constexpr bool cmpe(const T *dst, const T *src, usz n) noexcept {
     if constexpr (is_triv_eq_v<T>)
         return eq(dst, src, n * sizeof(T));
     else
-        for (usize i = 0; i < n; ++i)
+        for (usz i = 0; i < n; ++i)
             if (dst[i] != src[i]) return false;
 
     return true;
 }
 
 template<typename T>
-constexpr usize copye(T *dst, const T *src, usize d, usize s) noexcept {
-    const usize n = alg::min(d, s);
+constexpr usz copye(T *dst, const T *src, usz d, usz s) noexcept {
+    const usz n = alg::min(d, s);
 
     if constexpr (is_triv_cp_v<T>)
         copy(dst, src, n * sizeof(T));
     else
-        for (usize i = 0; i < n; ++i) construct(dst + i, src[i]);
+        for (usz i = 0; i < n; ++i) construct(dst + i, src[i]);
 
     return n;
 }
 
 template<typename T>
-constexpr usize movee(T *dst, const T *src, usize d, usize s) noexcept {
-    const usize n = alg::min(d, s);
+constexpr usz movee(T *dst, const T *src, usz d, usz s) noexcept {
+    const usz n = alg::min(d, s);
 
     if constexpr (is_triv_cp_v<T>)
         move(dst, src, n * sizeof(T));
     else
-        for (usize i = 0; i < n; ++i) construct(dst + i, mv(src[i]));
+        for (usz i = 0; i < n; ++i) construct(dst + i, mv(src[i]));
 
     return n;
 }
 
-template<typename T> constexpr void clse(T *dst, usize n) noexcept {
+template<typename T> constexpr void clse(T *dst, usz n) noexcept {
     if constexpr (is_triv_ds_v<T>) return;
 
-    for (usize i = 0; i < n; ++i) destroy(dst + i);
+    for (usz i = 0; i < n; ++i) destroy(dst + i);
 }
 
 } // namespace mem

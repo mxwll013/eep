@@ -32,7 +32,7 @@ public:
     // NOLINTEND(readability-identifier-naming)
 
     constexpr List() noexcept;
-    constexpr List(usize cap) noexcept;
+    constexpr List(usz cap) noexcept;
     constexpr List(const List &other) noexcept;
     constexpr List(List &&other) noexcept;
 
@@ -44,12 +44,12 @@ public:
     constexpr                        operator Span<const T>() const noexcept;
     constexpr                        operator Span<T>() noexcept;
 
-    [[nodiscard]] constexpr usize    len() const noexcept;
-    [[nodiscard]] constexpr usize    cap() const noexcept;
+    [[nodiscard]] constexpr usz      len() const noexcept;
+    [[nodiscard]] constexpr usz      cap() const noexcept;
     [[nodiscard]] constexpr bool     empty() const noexcept;
 
-    [[nodiscard]] constexpr const T &operator[](usize i) const noexcept;
-    [[nodiscard]] constexpr T       &operator[](usize i) noexcept;
+    [[nodiscard]] constexpr const T &operator[](usz i) const noexcept;
+    [[nodiscard]] constexpr T       &operator[](usz i) noexcept;
     [[nodiscard]] constexpr const T &first() const noexcept;
     [[nodiscard]] constexpr T       &first() noexcept;
     [[nodiscard]] constexpr const T &last() const noexcept;
@@ -62,23 +62,23 @@ public:
     [[nodiscard]] constexpr const T *end() const noexcept;
     [[nodiscard]] constexpr T       *end() noexcept;
 
-    constexpr usize                  copy(Span<const T> src) noexcept;
+    constexpr usz                    copy(Span<const T> src) noexcept;
 
-    [[nodiscard]] constexpr Span<const T> head(usize n) const noexcept;
-    [[nodiscard]] constexpr Span<T>       head(usize n) noexcept;
-    [[nodiscard]] constexpr Span<const T> tail(usize n) const noexcept;
-    [[nodiscard]] constexpr Span<T>       tail(usize n) noexcept;
-    [[nodiscard]] constexpr Span<const T> span(usize s, usize e) const noexcept;
-    [[nodiscard]] constexpr Span<T>       span(usize s, usize e) noexcept;
-    [[nodiscard]] constexpr Span<const T> span(usize s) const noexcept;
-    [[nodiscard]] constexpr Span<T>       span(usize s) noexcept;
-    [[nodiscard]] constexpr Span<const T> span() const noexcept;
-    [[nodiscard]] constexpr Span<T>       span() noexcept;
+    [[nodiscard]] constexpr Span<const T>  head(usz n) const noexcept;
+    [[nodiscard]] constexpr Span<T>        head(usz n) noexcept;
+    [[nodiscard]] constexpr Span<const T>  tail(usz n) const noexcept;
+    [[nodiscard]] constexpr Span<T>        tail(usz n) noexcept;
+    [[nodiscard]] constexpr Span<const T>  span(usz s, usz e) const noexcept;
+    [[nodiscard]] constexpr Span<T>        span(usz s, usz e) noexcept;
+    [[nodiscard]] constexpr Span<const T>  span(usz s) const noexcept;
+    [[nodiscard]] constexpr Span<T>        span(usz s) noexcept;
+    [[nodiscard]] constexpr Span<const T>  span() const noexcept;
+    [[nodiscard]] constexpr Span<T>        span() noexcept;
 
-    constexpr void                        cls() noexcept;
-    constexpr void                        free() noexcept;
-    constexpr void                        res(usize cap) noexcept;
-    constexpr void                        ensure(usize len) noexcept;
+    constexpr void                         cls() noexcept;
+    constexpr void                         free() noexcept;
+    constexpr void                         res(usz cap) noexcept;
+    constexpr void                         ensure(usz len) noexcept;
 
     template<typename... U> constexpr void emplace(U &&...args) noexcept;
     constexpr void                         push(const T &val) noexcept;
@@ -86,10 +86,10 @@ public:
     constexpr void                         pop() noexcept;
 
 private:
-    A     alloc_;
-    T    *arr_;
-    usize len_;
-    usize cap_;
+    A   alloc_;
+    T  *arr_;
+    usz len_;
+    usz cap_;
 };
 
 // === impl ===
@@ -102,7 +102,7 @@ constexpr List<T, A>::List() noexcept :
     cap_{ 0 } {}
 
 template<typename T, Alloc A>
-constexpr List<T, A>::List(usize cap) noexcept :
+constexpr List<T, A>::List(usz cap) noexcept :
     alloc_{},
     arr_{ alloc_.alloc(cap) },
     len_{ 0 },
@@ -137,7 +137,7 @@ constexpr List<T, A> &List<T, A>::operator=(const List &other) noexcept {
 
     alloc_ = other.alloc_;
     arr_   = alloc_.alloc(other.cap_);
-    cap_   = ther.cap_;
+    cap_   = other.cap_;
 
     copy(other);
     return *this;
@@ -178,11 +178,11 @@ constexpr List<T, A>::operator Span<const T>() const noexcept {
     return { arr_, len_ };
 }
 
-template<typename T, Alloc A> constexpr usize List<T, A>::len() const noexcept {
+template<typename T, Alloc A> constexpr usz List<T, A>::len() const noexcept {
     return len_;
 }
 
-template<typename T, Alloc A> constexpr usize List<T, A>::cap() const noexcept {
+template<typename T, Alloc A> constexpr usz List<T, A>::cap() const noexcept {
     return cap_;
 }
 
@@ -192,12 +192,12 @@ constexpr bool List<T, A>::empty() const noexcept {
 }
 
 template<typename T, Alloc A>
-constexpr const T &List<T, A>::operator[](usize i) const noexcept {
+constexpr const T &List<T, A>::operator[](usz i) const noexcept {
     return arr_[i];
 }
 
 template<typename T, Alloc A>
-constexpr T &List<T, A>::operator[](usize i) noexcept {
+constexpr T &List<T, A>::operator[](usz i) noexcept {
     return arr_[i];
 }
 
@@ -247,50 +247,50 @@ template<typename T, Alloc A> constexpr T *List<T, A>::end() noexcept {
 }
 
 template<typename T, Alloc A>
-constexpr usize List<T, A>::copy(Span<const T> src) noexcept {
+constexpr usz List<T, A>::copy(Span<const T> src) noexcept {
     ensure(len_ + src.len());
-    const usize n = mem::copye(arr_ + len_, src.data(), cap_ - len_, src.len());
-    len_ += n;
+    const usz n  = mem::copye(arr_ + len_, src.data(), cap_ - len_, src.len());
+    len_        += n;
     return n;
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> List<T, A>::head(usize n) const noexcept {
+constexpr Span<const T> List<T, A>::head(usz n) const noexcept {
     return { arr_, n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> List<T, A>::head(usize n) noexcept {
+constexpr Span<T> List<T, A>::head(usz n) noexcept {
     return { arr_, n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> List<T, A>::tail(usize n) const noexcept {
+constexpr Span<const T> List<T, A>::tail(usz n) const noexcept {
     return { arr_ + (len_ - n), n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> List<T, A>::tail(usize n) noexcept {
+constexpr Span<T> List<T, A>::tail(usz n) noexcept {
     return { arr_ + (len_ - n), n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> List<T, A>::span(usize s, usize e) const noexcept {
+constexpr Span<const T> List<T, A>::span(usz s, usz e) const noexcept {
     return { arr_ + s, e - s };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> List<T, A>::span(usize s, usize e) noexcept {
+constexpr Span<T> List<T, A>::span(usz s, usz e) noexcept {
     return { arr_ + s, e - s };
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> List<T, A>::span(usize s) const noexcept {
+constexpr Span<const T> List<T, A>::span(usz s) const noexcept {
     return { arr_ + s, len_ - s };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> List<T, A>::span(usize s) noexcept {
+constexpr Span<T> List<T, A>::span(usz s) noexcept {
     return { arr_ + s, len_ - s };
 }
 
@@ -316,13 +316,12 @@ template<typename T, Alloc A> constexpr void List<T, A>::free() noexcept {
     cap_ = 0;
 }
 
-template<typename T, Alloc A>
-constexpr void List<T, A>::res(usize cap) noexcept {
+template<typename T, Alloc A> constexpr void List<T, A>::res(usz cap) noexcept {
     if (cap <= cap_) return;
 
-    T          *arr = alloc_.alloc(cap);
+    T        *arr = alloc_.alloc(cap);
 
-    const usize n   = mem::movee(arr, arr_, cap, len_);
+    const usz n   = mem::movee(arr, arr_, cap, len_);
 
     cls();
     free();
@@ -333,10 +332,10 @@ constexpr void List<T, A>::res(usize cap) noexcept {
 }
 
 template<typename T, Alloc A>
-constexpr void List<T, A>::ensure(usize len) noexcept {
+constexpr void List<T, A>::ensure(usz len) noexcept {
     if (len <= cap_) return;
 
-    const usize n = cap_ == 0 ? 8 : (cap_ * 2) - 1;
+    const usz n = cap_ == 0 ? 8 : (cap_ * 2) - 1;
     res(alg::max(n, len));
 }
 

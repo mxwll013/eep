@@ -26,8 +26,8 @@ template<typename T> [[nodiscard]] constexpr T min(T a, T b) noexcept;
 template<typename T> [[nodiscard]] constexpr T max(T a, T b) noexcept;
 template<typename T> [[nodiscard]] constexpr T clamp(T v, T lo, T hi) noexcept;
 
-[[nodiscard]] constexpr usize                  ceil_log2(usize v) noexcept;
-[[nodiscard]] constexpr usize                  ceil_pow2(usize v) noexcept;
+[[nodiscard]] constexpr usz                    ceil_log2(usz v) noexcept;
+[[nodiscard]] constexpr usz                    ceil_pow2(usz v) noexcept;
 
 // NOLINTEND(readability-identifier-naming)
 
@@ -45,13 +45,13 @@ template<typename T> constexpr T clamp(T v, T lo, T hi) noexcept {
     return min(max(v, lo), hi);
 }
 
-constexpr usize ceil_log2(usize v) noexcept {
+constexpr usz ceil_log2(usz v) noexcept {
     if (v <= 1) return 0;
 
-    return (sizeof(usize) * 8) - intr::clz(v - 1);
+    return (sizeof(usz) * 8) - intr::clz(v - 1);
 }
 
-constexpr usize ceil_pow2(usize v) noexcept { return 1_usz << ceil_log2(v); }
+constexpr usz ceil_pow2(usz v) noexcept { return 1_usz << ceil_log2(v); }
 
 } // namespace alg
 } // namespace srr

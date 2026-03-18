@@ -32,7 +32,7 @@ public:
     // NOLINTEND(readability-identifier-naming)
 
     constexpr Str() noexcept;
-    constexpr Str(usize cap) noexcept;
+    constexpr Str(usz cap) noexcept;
     constexpr Str(Span<const T> span) noexcept;
     constexpr Str(const Str &other) noexcept;
     constexpr Str(Str &&other) noexcept;
@@ -45,12 +45,12 @@ public:
     constexpr                        operator Span<const T>() const noexcept;
     constexpr                        operator Span<T>() noexcept;
 
-    [[nodiscard]] constexpr usize    len() const noexcept;
-    [[nodiscard]] constexpr usize    cap() const noexcept;
+    [[nodiscard]] constexpr usz      len() const noexcept;
+    [[nodiscard]] constexpr usz      cap() const noexcept;
     [[nodiscard]] constexpr bool     empty() const noexcept;
 
-    [[nodiscard]] constexpr const T &operator[](usize i) const noexcept;
-    [[nodiscard]] constexpr T       &operator[](usize i) noexcept;
+    [[nodiscard]] constexpr const T &operator[](usz i) const noexcept;
+    [[nodiscard]] constexpr T       &operator[](usz i) noexcept;
     [[nodiscard]] constexpr const T &first() const noexcept;
     [[nodiscard]] constexpr T       &first() noexcept;
     [[nodiscard]] constexpr const T &last() const noexcept;
@@ -63,42 +63,42 @@ public:
     [[nodiscard]] constexpr const T *end() const noexcept;
     [[nodiscard]] constexpr T       *end() noexcept;
 
-    constexpr usize                  copy(Span<const T> src) noexcept;
+    constexpr usz                    copy(Span<const T> src) noexcept;
 
-    [[nodiscard]] constexpr Span<const T> head(usize n) const noexcept;
-    [[nodiscard]] constexpr Span<T>       head(usize n) noexcept;
-    [[nodiscard]] constexpr Span<const T> tail(usize n) const noexcept;
-    [[nodiscard]] constexpr Span<T>       tail(usize n) noexcept;
-    [[nodiscard]] constexpr Span<const T> span(usize s, usize e) const noexcept;
-    [[nodiscard]] constexpr Span<T>       span(usize s, usize e) noexcept;
-    [[nodiscard]] constexpr Span<const T> span(usize s) const noexcept;
-    [[nodiscard]] constexpr Span<T>       span(usize s) noexcept;
-    [[nodiscard]] constexpr Span<const T> span() const noexcept;
-    [[nodiscard]] constexpr Span<T>       span() noexcept;
+    [[nodiscard]] constexpr Span<const T>  head(usz n) const noexcept;
+    [[nodiscard]] constexpr Span<T>        head(usz n) noexcept;
+    [[nodiscard]] constexpr Span<const T>  tail(usz n) const noexcept;
+    [[nodiscard]] constexpr Span<T>        tail(usz n) noexcept;
+    [[nodiscard]] constexpr Span<const T>  span(usz s, usz e) const noexcept;
+    [[nodiscard]] constexpr Span<T>        span(usz s, usz e) noexcept;
+    [[nodiscard]] constexpr Span<const T>  span(usz s) const noexcept;
+    [[nodiscard]] constexpr Span<T>        span(usz s) noexcept;
+    [[nodiscard]] constexpr Span<const T>  span() const noexcept;
+    [[nodiscard]] constexpr Span<T>        span() noexcept;
 
-    constexpr void                        cls() noexcept;
-    constexpr void                        free() noexcept;
-    constexpr void                        res(usize cap) noexcept;
-    constexpr void                        ensure(usize len) noexcept;
+    constexpr void                         cls() noexcept;
+    constexpr void                         free() noexcept;
+    constexpr void                         res(usz cap) noexcept;
+    constexpr void                         ensure(usz len) noexcept;
 
     template<typename... U> constexpr void emplace(U &&...args) noexcept;
     constexpr void                         push(const T &val) noexcept;
     constexpr void                         push(T &&val) noexcept;
     constexpr void                         pop() noexcept;
 
-    [[nodiscard]] constexpr usize find(Span<const T> sub) const noexcept;
-    [[nodiscard]] constexpr usize find(const T &val) const noexcept;
+    [[nodiscard]] constexpr usz  find(Span<const T> sub) const noexcept;
+    [[nodiscard]] constexpr usz  find(const T &val) const noexcept;
 
-    [[nodiscard]] constexpr bool  prefix(Span<const T> pre) const noexcept;
-    [[nodiscard]] constexpr bool  suffix(Span<const T> suf) const noexcept;
-    [[nodiscard]] constexpr bool  contains(Span<const T> sub) const noexcept;
-    [[nodiscard]] constexpr bool  contains(const T &val) const noexcept;
+    [[nodiscard]] constexpr bool prefix(Span<const T> pre) const noexcept;
+    [[nodiscard]] constexpr bool suffix(Span<const T> suf) const noexcept;
+    [[nodiscard]] constexpr bool contains(Span<const T> sub) const noexcept;
+    [[nodiscard]] constexpr bool contains(const T &val) const noexcept;
 
 private:
-    A     alloc_;
-    T    *arr_;
-    usize len_;
-    usize cap_;
+    A   alloc_;
+    T  *arr_;
+    usz len_;
+    usz cap_;
 };
 
 // === impl ===
@@ -111,7 +111,7 @@ constexpr Str<T, A>::Str() noexcept :
     cap_{ 0 } {}
 
 template<typename T, Alloc A>
-constexpr Str<T, A>::Str(usize cap) noexcept :
+constexpr Str<T, A>::Str(usz cap) noexcept :
     alloc_{},
     arr_{ alloc_.alloc(cap) },
     len_{ 0 },
@@ -195,11 +195,11 @@ template<typename T, Alloc A> constexpr Str<T, A>::operator Span<T>() noexcept {
     return { arr_, len_ };
 }
 
-template<typename T, Alloc A> constexpr usize Str<T, A>::len() const noexcept {
+template<typename T, Alloc A> constexpr usz Str<T, A>::len() const noexcept {
     return len_;
 }
 
-template<typename T, Alloc A> constexpr usize Str<T, A>::cap() const noexcept {
+template<typename T, Alloc A> constexpr usz Str<T, A>::cap() const noexcept {
     return cap_;
 }
 
@@ -208,12 +208,12 @@ template<typename T, Alloc A> constexpr bool Str<T, A>::empty() const noexcept {
 }
 
 template<typename T, Alloc A>
-constexpr const T &Str<T, A>::operator[](usize i) const noexcept {
+constexpr const T &Str<T, A>::operator[](usz i) const noexcept {
     return arr_[i];
 }
 
 template<typename T, Alloc A>
-constexpr T &Str<T, A>::operator[](usize i) noexcept {
+constexpr T &Str<T, A>::operator[](usz i) noexcept {
     return arr_[i];
 }
 
@@ -263,51 +263,51 @@ template<typename T, Alloc A> constexpr T *Str<T, A>::end() noexcept {
 }
 
 template<typename T, Alloc A>
-constexpr usize Str<T, A>::copy(Span<const T> src) noexcept {
+constexpr usz Str<T, A>::copy(Span<const T> src) noexcept {
     ensure(len_ + src.len());
-    const usize n = mem::copye(arr_ + len_, src.data(), cap_ - len_, src.len());
-    len_       += n;
-    arr_[len_]  = T{};
+    const usz n  = mem::copye(arr_ + len_, src.data(), cap_ - len_, src.len());
+    len_        += n;
+    arr_[len_]   = T{};
     return n;
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> Str<T, A>::head(usize n) const noexcept {
+constexpr Span<const T> Str<T, A>::head(usz n) const noexcept {
     return { arr_, n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> Str<T, A>::head(usize n) noexcept {
+constexpr Span<T> Str<T, A>::head(usz n) noexcept {
     return { arr_, n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> Str<T, A>::tail(usize n) const noexcept {
+constexpr Span<const T> Str<T, A>::tail(usz n) const noexcept {
     return { arr_ + (len_ - n), n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> Str<T, A>::tail(usize n) noexcept {
+constexpr Span<T> Str<T, A>::tail(usz n) noexcept {
     return { arr_ + (len_ - n), n };
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> Str<T, A>::span(usize s, usize e) const noexcept {
+constexpr Span<const T> Str<T, A>::span(usz s, usz e) const noexcept {
     return { arr_ + s, e - s };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> Str<T, A>::span(usize s, usize e) noexcept {
+constexpr Span<T> Str<T, A>::span(usz s, usz e) noexcept {
     return { arr_ + s, e - s };
 }
 
 template<typename T, Alloc A>
-constexpr Span<const T> Str<T, A>::span(usize s) const noexcept {
+constexpr Span<const T> Str<T, A>::span(usz s) const noexcept {
     return { arr_ + s, len_ - s };
 }
 
 template<typename T, Alloc A>
-constexpr Span<T> Str<T, A>::span(usize s) noexcept {
+constexpr Span<T> Str<T, A>::span(usz s) noexcept {
     return { arr_ + s, len_ - s };
 }
 
@@ -333,13 +333,12 @@ template<typename T, Alloc A> constexpr void Str<T, A>::free() noexcept {
     cap_ = 0;
 }
 
-template<typename T, Alloc A>
-constexpr void Str<T, A>::res(usize cap) noexcept {
+template<typename T, Alloc A> constexpr void Str<T, A>::res(usz cap) noexcept {
     if (cap + 1 <= cap_) return;
 
-    T          *arr = alloc_.alloc(cap + 1);
+    T        *arr = alloc_.alloc(cap + 1);
 
-    const usize n   = mem::movee(arr, arr_, cap + 1, len_ + 1);
+    const usz n   = mem::movee(arr, arr_, cap + 1, len_ + 1);
 
     cls();
     free();
@@ -350,10 +349,10 @@ constexpr void Str<T, A>::res(usize cap) noexcept {
 }
 
 template<typename T, Alloc A>
-constexpr void Str<T, A>::ensure(usize len) noexcept {
+constexpr void Str<T, A>::ensure(usz len) noexcept {
     if (len <= cap_) return;
 
-    const usize n = cap_ == 0 ? 7 : (cap_ * 2) - 1;
+    const usz n = cap_ == 0 ? 7 : (cap_ * 2) - 1;
     res(alg::max(n, len));
 }
 
@@ -386,21 +385,21 @@ template<typename T, Alloc A> constexpr void Str<T, A>::pop() noexcept {
 }
 
 template<typename T, Alloc A>
-constexpr usize Str<T, A>::find(Span<const T> sub) const noexcept {
-    if (sub.len() > len_) return MAX_USIZE;
+constexpr usz Str<T, A>::find(Span<const T> sub) const noexcept {
+    if (sub.len() > len_) return MAX_USZ;
 
-    for (usize i = 0; i <= len_ - sub.len(); ++i)
+    for (usz i = 0; i <= len_ - sub.len(); ++i)
         if (mem::cmpe(arr_ + i, sub.data(), sub.len())) return i;
 
-    return MAX_USIZE;
+    return MAX_USZ;
 }
 
 template<typename T, Alloc A>
-constexpr usize Str<T, A>::find(const T &val) const noexcept {
-    for (usize i = 0; i < len_; ++i)
+constexpr usz Str<T, A>::find(const T &val) const noexcept {
+    for (usz i = 0; i < len_; ++i)
         if (arr_[i] == val) return i;
 
-    return MAX_USIZE;
+    return MAX_USZ;
 }
 
 template<typename T, Alloc A>
@@ -421,7 +420,7 @@ template<typename T, Alloc A>
 constexpr bool Str<T, A>::contains(Span<const T> sub) const noexcept {
     if (sub.len() > len_) return false;
 
-    for (usize i = 0; i <= len_ - sub.len(); ++i)
+    for (usz i = 0; i <= len_ - sub.len(); ++i)
         if (mem::cmpe(arr_ + i, sub.data(), sub.len())) return true;
 
     return false;
@@ -429,7 +428,7 @@ constexpr bool Str<T, A>::contains(Span<const T> sub) const noexcept {
 
 template<typename T, Alloc A>
 constexpr bool Str<T, A>::contains(const T &val) const noexcept {
-    for (usize i = 0; i < len_; ++i)
+    for (usz i = 0; i < len_; ++i)
         if (arr_[i] == val) return true;
 }
 

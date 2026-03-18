@@ -42,10 +42,10 @@ template<mem::Alloc A = mem::base_alloc<char>> using str = impl::Str<char, A>;
 using strb                                               = impl::Span<char>;
 
 // String view (immutable)
-using strv                     = impl::Span<const char>;
+using strv                   = impl::Span<const char>;
 
 // Fixed string
-template<usize N> using fx_str = impl::Arr<char, N>;
+template<usz N> using fx_str = impl::Arr<char, N>;
 
 // NOLINTEND(readability-identifier-naming)
 

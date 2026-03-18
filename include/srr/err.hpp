@@ -87,8 +87,8 @@ private:
 
 // === impl ===
 
-static constexpr usize EXITC_COUNT = static_cast<usize>(exitc::EXITC_COUNT);
-static constexpr usize ERRC_COUNT  = static_cast<usize>(errc::ERRC_COUNT);
+static constexpr usz EXITC_COUNT = static_cast<usz>(exitc::EXITC_COUNT);
+static constexpr usz ERRC_COUNT  = static_cast<usz>(errc::ERRC_COUNT);
 
 static constexpr arr<strv, EXITC_COUNT> STR_EXITC = {
     "Ok", "Fail", "Panic", "Unreachable", "Assertion fail", "System error",
@@ -108,15 +108,11 @@ static constexpr arr<exitc, ERRC_COUNT> CAST_ERRC = {
     Exitc::SYS,  // errc::SYS_MUNMAP_FAIL
 };
 
-constexpr strv msg(exitc c) noexcept {
-    return STR_EXITC[static_cast<usize>(c)];
-}
+constexpr strv  msg(exitc c) noexcept { return STR_EXITC[static_cast<usz>(c)]; }
 
-constexpr strv  msg(errc c) noexcept { return STR_ERRC[static_cast<usize>(c)]; }
+constexpr strv  msg(errc c) noexcept { return STR_ERRC[static_cast<usz>(c)]; }
 
-constexpr exitc cast(errc c) noexcept {
-    return CAST_ERRC[static_cast<usize>(c)];
-}
+constexpr exitc cast(errc c) noexcept { return CAST_ERRC[static_cast<usz>(c)]; }
 
 constexpr Err::Err() noexcept : c_{ errc::OK } {}
 

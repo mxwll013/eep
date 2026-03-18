@@ -46,7 +46,7 @@ template<Type T, typename... U>
 void log(const fmt_str<no_deduce_t<U>...> &fmt, U &&...args) {
     const strb buf  = impl::fmt_buf;
 
-    usize      n    = buf.copy(TYPE_STR<T>);
+    usz        n    = buf.copy(TYPE_STR<T>);
 
     n              += fmt.apply(buf.span(n), args...);
 

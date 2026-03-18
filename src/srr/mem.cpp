@@ -15,7 +15,7 @@
 
 #include "srr/types.hpp"
 
-void *operator new([[maybe_unused]] usize n, void *p) noexcept { return p; }
+void *operator new([[maybe_unused]] usz n, void *p) noexcept { return p; }
 
 void  operator delete([[maybe_unused]] void *p,
                      [[maybe_unused]] void *q) noexcept {}
@@ -23,24 +23,24 @@ void  operator delete([[maybe_unused]] void *p,
 inline namespace srr {
 namespace mem {
 
-bool eq(const void *a, const void *b, usize n) noexcept {
+bool eq(const void *a, const void *b, usz n) noexcept {
     const byte *x = static_cast<const byte *>(a);
     const byte *y = static_cast<const byte *>(b);
 
-    for (usize i = 0; i < n; ++i)
+    for (usz i = 0; i < n; ++i)
         if (x[i] != y[i]) return false;
 
     return true;
 }
 
-void copy(void *dst, const void *src, usize n) noexcept {
+void copy(void *dst, const void *src, usz n) noexcept {
     byte       *d = static_cast<byte *>(dst);
     const byte *s = static_cast<const byte *>(src);
 
-    for (usize i = 0; i < n; ++i) d[i] = s[i];
+    for (usz i = 0; i < n; ++i) d[i] = s[i];
 }
 
-void move(void *dst, const void *src, usize n) noexcept {
+void move(void *dst, const void *src, usz n) noexcept {
     if (dst < src) {
         copy(dst, src, n);
         return;
@@ -49,16 +49,16 @@ void move(void *dst, const void *src, usize n) noexcept {
     byte       *d = static_cast<byte *>(dst) + n;
     const byte *s = static_cast<const byte *>(src) + n;
 
-    for (usize i = 0; i < n; ++i) *--d = *--s;
+    for (usz i = 0; i < n; ++i) *--d = *--s;
 }
 
-void set(void *dst, byte v, usize n) noexcept {
+void set(void *dst, byte v, usz n) noexcept {
     byte *d = static_cast<byte *>(dst);
 
-    for (usize i = 0; i < n; ++i) d[i] = v;
+    for (usz i = 0; i < n; ++i) d[i] = v;
 }
 
-void zero(void *dst, usize n) noexcept { set(dst, 0, n); }
+void zero(void *dst, usz n) noexcept { set(dst, 0, n); }
 
 } // namespace mem
 } // namespace srr

@@ -28,7 +28,7 @@ i32 main() noexcept {
     LM_ASSERT(li.len() == 10);
     LM_ASSERT(!li.empty());
 
-    for (usize i = 0; i < li.len(); ++i) LM_DBG("[{}] = {}", i, li[i]);
+    for (usz i = 0; i < li.len(); ++i) LM_DBG("[{}] = {}", i, li[i]);
 
     LM_EXIT();
 }

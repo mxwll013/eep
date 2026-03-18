@@ -24,15 +24,15 @@ inline namespace srr {
 namespace sys {
 
 err write(sink s, strv v) noexcept {
-    const isize w = ::write(static_cast<int>(s), v.data(), v.len());
+    const isz w = ::write(static_cast<int>(s), v.data(), v.len());
 
     if (w < 0) return errc::SYS_WRITE_FAIL;
 
     return {};
 }
 
-void *mmap(usize len) noexcept {
-    const usize pages = (len + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
+void *mmap(usz len) noexcept {
+    const usz pages = (len + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1);
 
     return ::mmap(nullptr,
                   pages,
@@ -42,7 +42,7 @@ void *mmap(usize len) noexcept {
                   0);
 }
 
-err munmap(void *ptr, usize len) noexcept {
+err munmap(void *ptr, usz len) noexcept {
     const int r = ::munmap(ptr, len);
 
     if (r < 0) return errc::SYS_MUNMAP_FAIL;

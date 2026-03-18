@@ -22,18 +22,16 @@ namespace impl {
 
 namespace {
 
-usize index(usize n) noexcept {
-    return alg::ceil_log2(alg::max(n, sizeof(Block)));
-}
+usz index(usz n) noexcept { return alg::ceil_log2(alg::max(n, sizeof(Block))); }
 
-Block *split(Block *b, usize i) noexcept {
+Block *split(Block *b, usz i) noexcept {
     return reinterpret_cast<Block *>(reinterpret_cast<byte *>(b) +
                                      (1_usz << i));
 }
 
-Block *buddy(Block *b, usize n) noexcept {
+Block *buddy(Block *b, usz n) noexcept {
     // NOLINTNEXTLINE(performance-no-int-to-ptr)
-    return reinterpret_cast<Block *>(reinterpret_cast<usize>(b) ^ n);
+    return reinterpret_cast<Block *>(reinterpret_cast<usz>(b) ^ n);
 }
 
 } // namespace
@@ -69,14 +67,14 @@ void BlockList::push(Block *b) noexcept {
     head_   = b;
 }
 
-void *SysAlloc::alloc(usize n) noexcept {
+void *SysAlloc::alloc(usz n) noexcept {
     if (n == 0) return nullptr;
     if (n > sys::PAGE_SIZE) return sys::mmap(n);
 
-    const usize k = index(n);
-    n             = 1_usz << k;
+    const usz k = index(n);
+    n           = 1_usz << k;
 
-    usize i       = k;
+    usz i       = k;
     while (i < N && lists[i].empty()) ++i;
 
     Block *p = nullptr;
@@ -98,14 +96,14 @@ void *SysAlloc::alloc(usize n) noexcept {
     return p;
 }
 
-void SysAlloc::dealloc(void *ptr, usize n) noexcept {
+void SysAlloc::dealloc(void *ptr, usz n) noexcept {
     if (ptr == nullptr) return;
     if (n > sys::PAGE_SIZE) {
         sys::munmap(ptr, n);
         return;
     }
 
-    usize  k = index(n);
+    usz    k = index(n);
     Block *b = static_cast<Block *>(ptr);
 
     while (k < N - 1) {

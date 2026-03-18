@@ -26,7 +26,7 @@ constexpr bool              TRIV_EQ = __is_trivially_equality_comparable(T);
 
 [[nodiscard]] constexpr u32 clz(u32 v) noexcept;
 [[nodiscard]] constexpr u32 clz(u64 v) noexcept;
-[[nodiscard]] constexpr u32 clz(usize v) noexcept;
+[[nodiscard]] constexpr u32 clz(usz v) noexcept;
 
 // === impl ===
 
@@ -36,7 +36,7 @@ constexpr u32 clz(u64 v) noexcept {
     return static_cast<u32>(__builtin_clzll(v));
 }
 
-constexpr u32 clz(usize v) noexcept {
+constexpr u32 clz(usz v) noexcept {
     return static_cast<u32>(__builtin_clzl(v));
 }
 

@@ -19,8 +19,8 @@
 
 // NOLINTNEXTLINE(cppcoreguidelines-special-member-functions, hicpp-special-member-functions)
 struct Test {
-    static usize alloc_count;
-    static usize dealloc_count;
+    static usz alloc_count;
+    static usz dealloc_count;
 
     // NOLINTNEXTLINE(readability-named-parameter, hicpp-named-parameter)
     Test(const Test &) noexcept { ++alloc_count; }
@@ -30,10 +30,10 @@ struct Test {
     ~Test() noexcept { ++dealloc_count; }
 };
 
-usize Test::alloc_count   = 0;
-usize Test::dealloc_count = 0;
+usz Test::alloc_count   = 0;
+usz Test::dealloc_count = 0;
 
-i32   main() noexcept {
+i32 main() noexcept {
     {
         const Test         t;
         const arr<Test, 3> a = { t, t, t };

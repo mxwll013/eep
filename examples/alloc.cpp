@@ -17,11 +17,11 @@
 #include <srr/types.hpp>
 
 i32 main() noexcept {
-    const usize n = 13;
+    const usz  n = 13;
 
-    const strb  buf{ mem::alloc<char>(n), n };
+    const strb buf{ mem::alloc<char>(n), n };
 
-    const usize m = buf.copy("Hello, world!");
+    const usz  m = buf.copy("Hello, world!");
 
     LM_ASSERT(n == m);
 

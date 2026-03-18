@@ -19,7 +19,7 @@
 
 namespace lm::impl {
 
-static constexpr usize BUF_LEN = 1024;
+static constexpr usz BUF_LEN = 1024;
 
 // NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 static thread_local arr<char, BUF_LEN> fmt_buf;

@@ -27,13 +27,13 @@ inline namespace srr {
 
 // Dynamic array (owning)
 template<typename T, mem::Alloc A = mem::base_alloc<T>>
-using list                              = impl::List<T, A>;
+using list                            = impl::List<T, A>;
 
 // Array (fixed-size, owning)
-template<typename T, usize N> using arr = impl::Arr<T, N>;
+template<typename T, usz N> using arr = impl::Arr<T, N>;
 
 // Span (non-owning view)
-template<typename T> using span         = impl::Span<T>;
+template<typename T> using span       = impl::Span<T>;
 
 // NOLINTEND(readability-identifier-naming)
 

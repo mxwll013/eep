@@ -21,7 +21,7 @@ inline namespace srr {
 namespace impl {
 
 template<typename A>
-concept Alloc = requires(A a, val_t<A> *ptr, usize n) {
+concept Alloc = requires(A a, val_t<A> *ptr, usz n) {
     { a.alloc(n) } noexcept -> Same<val_t<A> *>;
     { a.dealloc(ptr, n) } noexcept -> Same<void>;
 };
@@ -43,31 +43,31 @@ private:
 
 class SysAlloc {
 public:
-    static void *alloc(usize n) noexcept;
-    static void  dealloc(void *ptr, usize n) noexcept;
+    static void *alloc(usz n) noexcept;
+    static void  dealloc(void *ptr, usz n) noexcept;
 
 private:
-    static constexpr usize N = 12;
-    static BlockList       lists[N];
+    static constexpr usz N = 12;
+    static BlockList     lists[N];
 };
 
 template<typename T> struct BaseAlloc {
     // NOLINTNEXTLINE(readability-identifier-naming)
     using val_t = T;
 
-    T   *alloc(usize n) noexcept;
-    void dealloc(T *ptr, usize n) noexcept;
+    T   *alloc(usz n) noexcept;
+    void dealloc(T *ptr, usz n) noexcept;
 };
 
 static_assert(Alloc<BaseAlloc<byte>>);
 
 // === impl ===
 
-template<typename T> T *BaseAlloc<T>::alloc(usize n) noexcept {
+template<typename T> T *BaseAlloc<T>::alloc(usz n) noexcept {
     return static_cast<T *>(SysAlloc::alloc(n * sizeof(T)));
 }
 
-template<typename T> void BaseAlloc<T>::dealloc(T *ptr, usize n) noexcept {
+template<typename T> void BaseAlloc<T>::dealloc(T *ptr, usz n) noexcept {
     SysAlloc::dealloc(ptr, n * sizeof(T));
 }
 

@@ -36,12 +36,12 @@ constexpr sink      CIN       = 0;
 constexpr sink      COUT      = 1;
 constexpr sink      CERR      = 2;
 
-constexpr usize     PAGE_SIZE = 4096;
+constexpr usz       PAGE_SIZE = 4096;
 
 err                 write(sink s, strv v) noexcept;
 
-[[nodiscard]] void *mmap(usize len) noexcept;
-err                 munmap(void *ptr, usize len) noexcept;
+[[nodiscard]] void *mmap(usz len) noexcept;
+err                 munmap(void *ptr, usz len) noexcept;
 
 [[noreturn]] void   exit(exitc c) noexcept;
 
