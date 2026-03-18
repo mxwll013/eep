@@ -17,10 +17,9 @@
 #include "srr/impl/Alloc.hpp"
 #include "srr/impl/Span.hpp"
 
+#include "srr/alg.hpp"
 #include "srr/mem.hpp"
 #include "srr/types.hpp"
-
-#include <cstdio>
 
 inline namespace srr {
 namespace impl {
@@ -40,10 +39,10 @@ public:
     constexpr List &operator=(const List &other) noexcept;
     constexpr List &operator=(List &&other) noexcept;
 
-    ~List() noexcept;
+    constexpr ~List() noexcept;
 
-    constexpr                        operator Span<T>() noexcept;
     constexpr                        operator Span<const T>() const noexcept;
+    constexpr                        operator Span<T>() noexcept;
 
     [[nodiscard]] constexpr usize    len() const noexcept;
     [[nodiscard]] constexpr usize    cap() const noexcept;
@@ -63,7 +62,7 @@ public:
     [[nodiscard]] constexpr const T *end() const noexcept;
     [[nodiscard]] constexpr T       *end() noexcept;
 
-    [[nodiscard]] constexpr usize    copy(Span<const T> src) noexcept;
+    constexpr usize                  copy(Span<const T> src) noexcept;
 
     [[nodiscard]] constexpr Span<const T> head(usize n) const noexcept;
     [[nodiscard]] constexpr Span<T>       head(usize n) noexcept;
@@ -113,7 +112,7 @@ template<typename T, Alloc A>
 constexpr List<T, A>::List(const List &other) noexcept :
     alloc_{ other.alloc_ },
     arr_{ alloc_.alloc(other.cap_) },
-    len_{ other.len_ },
+    len_{ 0 },
     cap_{ other.cap_ } {
     copy(other);
 }
@@ -138,8 +137,7 @@ constexpr List<T, A> &List<T, A>::operator=(const List &other) noexcept {
 
     alloc_ = other.alloc_;
     arr_   = alloc_.alloc(other.cap_);
-    len_   = other.len_;
-    cap_   = other.cap_;
+    cap_   = ther.cap_;
 
     copy(other);
     return *this;
@@ -164,7 +162,8 @@ constexpr List<T, A> &List<T, A>::operator=(List &&other) noexcept {
     return *this;
 }
 
-template<typename T, Alloc A> List<T, A>::~List() noexcept {
+template<typename T, Alloc A> constexpr List<T, A>::~List() noexcept {
+    if (arr_ == nullptr) return;
     cls();
     free();
 }
@@ -249,6 +248,7 @@ template<typename T, Alloc A> constexpr T *List<T, A>::end() noexcept {
 
 template<typename T, Alloc A>
 constexpr usize List<T, A>::copy(Span<const T> src) noexcept {
+    ensure(len_ + src.len());
     const usize n = mem::copye(arr_ + len_, src.data(), cap_ - len_, src.len());
     len_ += n;
     return n;
@@ -335,7 +335,9 @@ constexpr void List<T, A>::res(usize cap) noexcept {
 template<typename T, Alloc A>
 constexpr void List<T, A>::ensure(usize len) noexcept {
     if (len <= cap_) return;
-    res(cap_ == 0 ? 1 : cap_ * 2);
+
+    const usize n = cap_ == 0 ? 8 : (cap_ * 2) - 1;
+    res(alg::max(n, len));
 }
 
 template<typename T, Alloc A>

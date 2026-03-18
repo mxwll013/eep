@@ -12,23 +12,20 @@
  */
 
 #include <lm/macros.hpp>
-#include <srr/ctr.hpp>
+#include <srr/str.hpp>
 #include <srr/types.hpp>
 
 i32 main() noexcept {
-    list<i32> li;
+    const str s{ "Hello, world!" };
 
-    LM_ASSERT(li.cap() == 0);
-    LM_ASSERT(li.len() == 0);
-    LM_ASSERT(li.empty());
+    LM_ASSERT(s.prefix("Hello"));
+    LM_ASSERT(s.suffix("world!"));
 
-    for (i32 i = 0; i < 10; ++i) li.push(i * i);
+    LM_DBG("[s] len = {}", s.len());
+    LM_DBG("[s] cap = {}", s.cap());
+    LM_DBG("[s] empty = {}", s.empty());
 
-    LM_ASSERT(li.cap() >= 10);
-    LM_ASSERT(li.len() == 10);
-    LM_ASSERT(!li.empty());
-
-    for (usize i = 0; i < li.len(); ++i) LM_DBG("[{}] = {}", i, li[i]);
+    LM_DBG("[s] '{}'", s);
 
     LM_EXIT();
 }

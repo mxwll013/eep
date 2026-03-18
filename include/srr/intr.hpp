@@ -21,10 +21,12 @@ namespace intr {
 
 template<typename T> constexpr bool TRIV_CP = __is_trivially_copyable(T);
 template<typename T> constexpr bool TRIV_DS = __is_trivially_destructible(T);
+template<typename T>
+constexpr bool              TRIV_EQ = __is_trivially_equality_comparable(T);
 
-[[nodiscard]] constexpr u32         clz(u32 v) noexcept;
-[[nodiscard]] constexpr u32         clz(u64 v) noexcept;
-[[nodiscard]] constexpr u32         clz(usize v) noexcept;
+[[nodiscard]] constexpr u32 clz(u32 v) noexcept;
+[[nodiscard]] constexpr u32 clz(u64 v) noexcept;
+[[nodiscard]] constexpr u32 clz(usize v) noexcept;
 
 // === impl ===
 

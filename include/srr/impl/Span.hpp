@@ -43,7 +43,7 @@ public:
     [[nodiscard]] constexpr T      *begin() const noexcept;
     [[nodiscard]] constexpr T      *end() const noexcept;
 
-    [[nodiscard]] constexpr usize   copy(Span<const T> src) const noexcept;
+    constexpr usize                 copy(Span<const T> src) const noexcept;
 
     [[nodiscard]] constexpr Span<T> head(usize n) const noexcept;
     [[nodiscard]] constexpr Span<T> tail(usize n) const noexcept;

@@ -23,6 +23,16 @@ void  operator delete([[maybe_unused]] void *p,
 inline namespace srr {
 namespace mem {
 
+bool eq(const void *a, const void *b, usize n) noexcept {
+    const byte *x = static_cast<const byte *>(a);
+    const byte *y = static_cast<const byte *>(b);
+
+    for (usize i = 0; i < n; ++i)
+        if (x[i] != y[i]) return false;
+
+    return true;
+}
+
 void copy(void *dst, const void *src, usize n) noexcept {
     byte       *d = static_cast<byte *>(dst);
     const byte *s = static_cast<const byte *>(src);

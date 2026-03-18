@@ -19,6 +19,7 @@
 #include "srr/impl/Str.hpp"
 #include "srr/impl/ansi.hpp"
 
+#include "srr/mem.hpp"
 #include "srr/types.hpp"
 
 #define SRR_BLACK(...)   SRR_IMPL_ANSI_BLACK(__VA_ARGS__)
@@ -35,10 +36,10 @@ inline namespace srr {
 // NOLINTBEGIN(readability-identifier-naming)
 
 // String (owning)
-using str                      = impl::Str<char>;
+template<mem::Alloc A = mem::base_alloc<char>> using str = impl::Str<char, A>;
 
 // String buffer (mutable)
-using strb                     = impl::Span<char>;
+using strb                                               = impl::Span<char>;
 
 // String view (immutable)
 using strv                     = impl::Span<const char>;

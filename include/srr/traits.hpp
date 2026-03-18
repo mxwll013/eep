@@ -33,6 +33,7 @@ template<usize N, typename... U> struct is_len;
 
 template<typename T> struct is_triv_cp;
 template<typename T> struct is_triv_ds;
+template<typename T> struct is_triv_eq;
 template<typename T> struct is_int;
 template<typename T> struct is_signed;
 template<typename T> struct is_lvalue_ref;
@@ -81,6 +82,7 @@ template<usize N, typename... U> constexpr bool is_len_v = is_len<N, U...>::val;
 
 template<typename T> constexpr bool is_triv_cp_v         = is_triv_cp<T>::val;
 template<typename T> constexpr bool is_triv_ds_v         = is_triv_ds<T>::val;
+template<typename T> constexpr bool is_triv_eq_v         = is_triv_eq<T>::val;
 template<typename T> constexpr bool is_int_v             = is_int<T>::val;
 template<typename T> constexpr bool is_signed_v          = is_signed<T>::val;
 template<typename T> constexpr bool is_lvalue_ref_v = is_lvalue_ref<T>::val;
@@ -142,6 +144,10 @@ template<typename T> struct is_triv_cp {
 
 template<typename T> struct is_triv_ds {
     static constexpr bool val = intr::TRIV_DS<T>;
+};
+
+template<typename T> struct is_triv_eq {
+    static constexpr bool val = intr::TRIV_EQ<T>;
 };
 
 template<typename> struct is_int : false_t {};
