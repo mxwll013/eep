@@ -16,16 +16,25 @@
 #include <srr/types.hpp>
 
 i32 main() noexcept {
-    const str s{ "Hello, world!" };
+    str s1{ "Hello, world!" };
+    str s2{};
 
-    LM_ASSERT(s.prefix("Hello"));
-    LM_ASSERT(s.suffix("world!"));
+    for (const char c : s1) s2.push(c);
 
-    LM_DBG("[s] len = {}", s.len());
-    LM_DBG("[s] cap = {}", s.cap());
-    LM_DBG("[s] empty = {}", s.empty());
+    LM_ASSERT(s1.prefix("Hello"));
+    LM_ASSERT(s1.suffix("world!"));
 
-    LM_DBG("[s] '{}'", s);
+    LM_ASSERT(s2.prefix("Hello"));
+    LM_ASSERT(s2.suffix("world!"));
+
+    LM_DBG("[s1] len = {}", s1.len());
+    LM_DBG("[s1] cap = {}", s1.cap());
+
+    LM_DBG("[s2] len = {}", s2.len());
+    LM_DBG("[s2] cap = {}", s2.cap());
+
+    LM_DBG("[s1] '{}'", s1);
+    LM_DBG("[s2] '{}'", s2);
 
     LM_EXIT();
 }

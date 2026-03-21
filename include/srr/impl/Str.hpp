@@ -334,26 +334,33 @@ template<typename T, Alloc A> constexpr void Str<T, A>::free() noexcept {
 }
 
 template<typename T, Alloc A> constexpr void Str<T, A>::res(usz cap) noexcept {
-    if (cap + 1 <= cap_) return;
+    if (cap <= cap_) return;
 
-    T        *arr = alloc_.alloc(cap + 1);
+    T *arr = alloc_.alloc(cap);
 
-    const usz n   = mem::movee(arr, arr_, cap + 1, len_ + 1);
+    if (arr_ == nullptr) {
+        arr_    = arr;
+        cap_    = cap;
+        arr_[0] = T{};
+        return;
+    }
+
+    const usz n = mem::movee(arr, arr_, cap, len_ + 1);
 
     cls();
     free();
 
     arr_ = arr;
     len_ = n - 1;
-    cap_ = cap + 1;
+    cap_ = cap;
 }
 
 template<typename T, Alloc A>
 constexpr void Str<T, A>::ensure(usz len) noexcept {
-    if (len <= cap_) return;
+    if (len + 1 <= cap_) return;
 
-    const usz n = cap_ == 0 ? 7 : (cap_ * 2) - 1;
-    res(alg::max(n, len));
+    const usz n = cap_ == 0 ? 8 : cap_ * 2;
+    res(alg::max(n, len + 1));
 }
 
 template<typename T, Alloc A>
