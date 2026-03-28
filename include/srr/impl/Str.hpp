@@ -81,7 +81,7 @@ public:
     constexpr void                         res(usz cap) noexcept;
     constexpr void                         ensure(usz len) noexcept;
 
-    template<typename... U> constexpr void emplace(U &&...args) noexcept;
+    template<typename... U> constexpr void empl(U &&...args) noexcept;
     constexpr void                         push(const T &val) noexcept;
     constexpr void                         push(T &&val) noexcept;
     constexpr void                         pop() noexcept;
@@ -93,6 +93,8 @@ public:
     [[nodiscard]] constexpr bool suffix(Span<const T> suf) const noexcept;
     [[nodiscard]] constexpr bool contains(Span<const T> sub) const noexcept;
     [[nodiscard]] constexpr bool contains(const T &val) const noexcept;
+
+    constexpr bool               operator==(const Span<T> &s) const noexcept;
 
 private:
     A   alloc_;
@@ -365,9 +367,9 @@ constexpr void Str<T, A>::ensure(usz len) noexcept {
 
 template<typename T, Alloc A>
 template<typename... U>
-constexpr void Str<T, A>::emplace(U &&...args) noexcept {
+constexpr void Str<T, A>::empl(U &&...args) noexcept {
     ensure(len_ + 1);
-    mem::construct(arr_ + len_, fwd(args)...);
+    mem::construct(arr_ + len_, fwd<U>(args)...);
     arr_[++len_] = T{};
 }
 
@@ -387,56 +389,43 @@ template<typename T, Alloc A> constexpr void Str<T, A>::push(T &&val) noexcept {
 template<typename T, Alloc A> constexpr void Str<T, A>::pop() noexcept {
     if (len_ == 0) return;
 
-    mem::destroy(arr_ + --len_);
+    mem::destruct(arr_ + --len_);
     arr_[len_] = T{};
 }
 
 template<typename T, Alloc A>
 constexpr usz Str<T, A>::find(Span<const T> sub) const noexcept {
-    if (sub.len() > len_) return MAX_USZ;
-
-    for (usz i = 0; i <= len_ - sub.len(); ++i)
-        if (mem::cmpe(arr_ + i, sub.data(), sub.len())) return i;
-
-    return MAX_USZ;
+    return Span<T>{ *this }.find(sub);
 }
 
 template<typename T, Alloc A>
 constexpr usz Str<T, A>::find(const T &val) const noexcept {
-    for (usz i = 0; i < len_; ++i)
-        if (arr_[i] == val) return i;
-
-    return MAX_USZ;
+    return Span<T>{ *this }.find(val);
 }
 
 template<typename T, Alloc A>
 constexpr bool Str<T, A>::prefix(Span<const T> pre) const noexcept {
-    if (pre.len() > len_) return false;
-
-    return mem::cmpe(arr_, pre.data(), pre.len());
+    return Span<const T>{ *this }.prefix(pre);
 }
 
 template<typename T, Alloc A>
 constexpr bool Str<T, A>::suffix(Span<const T> suf) const noexcept {
-    if (suf.len() > len_) return false;
-
-    return mem::cmpe(arr_ + (len_ - suf.len()), suf.data(), suf.len());
+    return Span<const T>{ *this }.suffix(suf);
 }
 
 template<typename T, Alloc A>
 constexpr bool Str<T, A>::contains(Span<const T> sub) const noexcept {
-    if (sub.len() > len_) return false;
-
-    for (usz i = 0; i <= len_ - sub.len(); ++i)
-        if (mem::cmpe(arr_ + i, sub.data(), sub.len())) return true;
-
-    return false;
+    return Span<T>{ *this }.contains(sub);
 }
 
 template<typename T, Alloc A>
 constexpr bool Str<T, A>::contains(const T &val) const noexcept {
-    for (usz i = 0; i < len_; ++i)
-        if (arr_[i] == val) return true;
+    return Span<T>{ *this }.contains(val);
+}
+
+template<typename T, Alloc A>
+constexpr bool Str<T, A>::operator==(const Span<T> &s) const noexcept {
+    return Span<T>{ *this } == s;
 }
 
 } // namespace impl

@@ -18,17 +18,17 @@
 i32 main() noexcept {
     list<i32> li;
 
-    LM_ASSERT(li.cap() == 0);
-    LM_ASSERT(li.len() == 0);
-    LM_ASSERT(li.empty());
+    LM_CHECK(li.cap() == 0);
+    LM_CHECK(li.len() == 0);
+    LM_CHECK(li.empty());
 
     for (i32 i = 0; i < 10; ++i) li.push(i * i);
 
-    LM_ASSERT(li.cap() >= 10);
-    LM_ASSERT(li.len() == 10);
-    LM_ASSERT(!li.empty());
+    LM_CHECK(li.cap() >= 10);
+    LM_CHECK(li.len() == 10);
+    LM_CHECK(!li.empty());
 
     for (usz i = 0; i < li.len(); ++i) LM_DBG("[{}] = {}", i, li[i]);
 
-    LM_EXIT();
+    LM_TERM();
 }

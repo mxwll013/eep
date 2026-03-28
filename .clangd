@@ -44,6 +44,7 @@ Diagnostics:
     AnalyzeAngledIncludes: true
 
   ClangTidy:
+    FastCheckFilter: None
     Add:
       - abseil-*
       - android-*
@@ -111,8 +112,6 @@ Diagnostics:
       readability-identifier-naming.TemplateParameter: UPPER_CASE
 
       readability-identifier-naming.PrivateMemberSuffix: _
-
-    FastCheckFilter: None
 
 Completion:
   AllScopes: Yes

@@ -61,13 +61,23 @@ constexpr usz fmt(const strb &buf, char v) noexcept {
 // constexpr usz fmt(const strb &buf, f32 v) noexcept;
 // constexpr usz fmt(const strb &buf, f64 v) noexcept;
 
-constexpr usz fmt(const strb &buf, exitc v) noexcept {
-    return buf.copy(msg(v));
+constexpr usz fmt(const strb &buf, ter v) noexcept { return buf.copy(v.msg()); }
+
+constexpr usz fmt(const strb &buf, err v) noexcept {
+    usz        n  = buf.copy(v.msg());
+
+    const strv tr = v.trace();
+
+    if (tr) {
+        buf[n++]  = ' ';
+        buf[n++]  = '\'';
+        n        += buf.span(n).copy(tr);
+
+        buf[n++]  = '\'';
+    }
+
+    return n;
 }
-
-constexpr usz fmt(const strb &buf, errc v) noexcept { return buf.copy(msg(v)); }
-
-constexpr usz fmt(const strb &buf, err v) noexcept { return buf.copy(v.msg()); }
 
 template<usz N>
 constexpr usz fmt(const strb &buf, const char (&v)[N]) noexcept {
@@ -76,12 +86,18 @@ constexpr usz fmt(const strb &buf, const char (&v)[N]) noexcept {
 
 constexpr usz fmt(const strb &buf, strv v) noexcept { return buf.copy(v); }
 
+constexpr usz fmt(const strb &buf, strb v) noexcept { return buf.copy(v); }
+
+constexpr usz fmt(const strb &buf, const str &v) noexcept {
+    return buf.copy(v);
+}
+
 template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept {
-    using U = make_unsigned_t<I>;
+    using U = mk_uint_t<I>;
     U   u;
     usz i = 0;
 
-    if constexpr (is_signed_v<I>) {
+    if constexpr (is_sint_v<I>) {
         if (v < 0) {
             buf[i++] = '-';
             u        = 0 - static_cast<U>(v);
@@ -94,6 +110,8 @@ template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept {
     }
 
     fx_str<32> rev;
+
+    // NOLINTNEXTLINE(misc-const-correctness)
     char      *p = rev.end();
 
     while (u >= 100) {

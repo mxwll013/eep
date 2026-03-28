@@ -35,11 +35,14 @@ inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-// String (owning)
-template<mem::Alloc A = mem::base_alloc<char>> using str = impl::Str<char, A>;
+template<typename T, mem::Alloc A = mem::base_alloc<char>>
+using base_str               = impl::Str<T, A>;
+
+// String (owning, mutable)
+using str                    = base_str<char>;
 
 // String buffer (mutable)
-using strb                                               = impl::Span<char>;
+using strb                   = impl::Span<char>;
 
 // String view (immutable)
 using strv                   = impl::Span<const char>;

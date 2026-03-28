@@ -46,6 +46,8 @@ void move(void *dst, const void *src, usz n) noexcept {
         return;
     }
 
+
+    // NOLINTNEXTLINE(misc-const-correctness)
     byte       *d = static_cast<byte *>(dst) + n;
     const byte *s = static_cast<const byte *>(src) + n;
 

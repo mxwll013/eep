@@ -16,6 +16,7 @@
 
 #include "srr/impl/Arr.hpp"
 #include "srr/impl/List.hpp"
+#include "srr/impl/Ref.hpp"
 #include "srr/impl/Span.hpp"
 
 #include "srr/mem.hpp"
@@ -34,6 +35,12 @@ template<typename T, usz N> using arr = impl::Arr<T, N>;
 
 // Span (non-owning view)
 template<typename T> using span       = impl::Span<T>;
+
+// Reference (non-owning, single element)
+template<typename T> using ref        = impl::Ref<T>;
+
+// Const reference (non-owning, single element)
+template<typename T> using cref       = impl::Ref<const T>;
 
 // NOLINTEND(readability-identifier-naming)
 

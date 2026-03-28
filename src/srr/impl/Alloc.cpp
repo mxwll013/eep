@@ -41,6 +41,7 @@ BlockList SysAlloc::lists[SysAlloc::N] = {};
 bool      BlockList::empty() const noexcept { return head_ == nullptr; }
 
 Block    *BlockList::pop() noexcept {
+    // NOLINTNEXTLINE(misc-const-correctness)
     Block *b = head_;
     if (b != nullptr) head_ = head_->next;
     return b;

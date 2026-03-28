@@ -23,7 +23,7 @@ inline namespace srr {
 
 using nil             = decltype(nullptr);
 
-using byte            = unsigned char;
+using byte            = char;
 using ull             = unsigned long long;
 
 using i8              = int8_t;

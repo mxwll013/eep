@@ -31,12 +31,13 @@ constexpr usz                 fmt(const strb &buf, char v) noexcept;
 // constexpr usz fmt(const strb &buf, f32 v) noexcept;
 // constexpr usz fmt(const strb &buf, f64 v) noexcept;
 
-constexpr usz                 fmt(const strb &buf, exitc v) noexcept;
-constexpr usz                 fmt(const strb &buf, errc v) noexcept;
+constexpr usz                 fmt(const strb &buf, ter v) noexcept;
 constexpr usz                 fmt(const strb &buf, err v) noexcept;
 
 template<usz N> constexpr usz fmt(const strb &buf, const char (&v)[N]) noexcept;
 constexpr usz                 fmt(const strb &buf, strv v) noexcept;
+constexpr usz                 fmt(const strb &buf, strb v) noexcept;
+constexpr usz                 fmt(const strb &buf, const str &v) noexcept;
 
 template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept;
 

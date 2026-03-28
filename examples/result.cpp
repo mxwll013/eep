@@ -39,5 +39,5 @@ i32 main() noexcept {
     check(r1);
     check(r2);
 
-    LM_EXIT();
+    LM_TERM();
 }

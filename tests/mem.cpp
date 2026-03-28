@@ -11,10 +11,9 @@
  * ------------------------------------------------------------------------------
  */
 
-#include "srr/err.hpp"
-
 #include <lm/macros.hpp>
 #include <srr/ctr.hpp>
+#include <srr/err.hpp>
 #include <srr/types.hpp>
 
 // NOLINTNEXTLINE(cppcoreguidelines-special-member-functions, hicpp-special-member-functions)
@@ -37,13 +36,12 @@ i32 main() noexcept {
     {
         const Test         t;
         const arr<Test, 3> a = { t, t, t };
+        const res<Test>    r = t;
 
-        const res<Test>    r = { t };
-
-        LM_ASSERT(Test::alloc_count == 5);
-        LM_ASSERT(Test::dealloc_count == 0);
+        LM_CHECK(Test::alloc_count == 5);
+        LM_CHECK(Test::dealloc_count == 0);
     }
 
-    LM_ASSERT(Test::dealloc_count == 5);
-    LM_EXIT();
+    LM_CHECK(Test::dealloc_count == 5);
+    LM_TERM();
 }

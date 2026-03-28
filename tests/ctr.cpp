@@ -19,10 +19,10 @@ i32 main() noexcept {
     const arr<i32, 0>  a;
     const arr<usz, 10> b = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-    LM_ASSERT(a.empty());
+    LM_CHECK(a.empty());
 
-    for (usz i = 0; i < b.len(); ++i) LM_ASSERT(i == b[i]);
-    for (const usz e : b) LM_ASSERT(e == b[e]);
+    for (usz i = 0; i < b.len(); ++i) LM_CHECK(i == b[i]);
+    for (const usz e : b) LM_CHECK(e == b[e]);
 
-    LM_EXIT();
+    LM_TERM();
 }

@@ -22,105 +22,114 @@
 namespace lm {
 
 void panic(Trace &&t, strv msg) noexcept {
-    LM_INFO("{} : {}", t.file, t.line);
+    LM_TRC("{} : {}", t.file, t.line);
     LM_ERR("{}", msg);
-    LM_EXIT(exitc::PANIC);
+    LM_TERM(ter::PANIC);
 }
 
 void panic(Trace &&t, err e) noexcept {
-    LM_INFO("{} : {}", t.file, t.line);
+    LM_TRC("{} : {}", t.file, t.line);
     LM_ERR("{}", e);
-    LM_EXIT(exitc::PANIC);
+    LM_TERM(ter::PANIC);
 }
 
 void panic(Trace &&t) noexcept {
-    LM_INFO("{} : {}", t.file, t.line);
-    LM_EXIT(exitc::PANIC);
+    LM_TRC("{} : {}", t.file, t.line);
+    LM_TERM(ter::PANIC);
 }
 
 void panic(strv msg) noexcept {
     LM_ERR("{}", msg);
-    LM_EXIT(exitc::PANIC);
+    LM_TERM(ter::PANIC);
 }
 
 void panic(err e) noexcept {
     LM_ERR("{}", e);
-    LM_EXIT(exitc::PANIC);
+    LM_TERM(ter::PANIC);
 }
 
 void panic() noexcept {
     // ...
-    LM_EXIT(exitc::PANIC);
+    LM_TERM(ter::PANIC);
 }
 
-void exit(exitc c) noexcept {
+void term(ter e) noexcept {
+    const terc c = e.code();
+
     switch (c) {
-    case exitc::OK         : break;
-    case exitc::PANIC      : [[fallthrough]];
-    case exitc::UNREACHABLE: [[fallthrough]];
-    case exitc::ASSERT     : LM_PAN("{}", c); break;
-    default                : LM_ERR("{}", c); break;
+    case ter::OK     : break;
+    case ter::PANIC  : [[fallthrough]];
+    case ter::UNREACH: [[fallthrough]];
+    case ter::CHECK  : LM_PAN("{}", e); break;
+    default          : LM_ERR("{}", e); break;
     }
 
     sys::exit(c);
 }
 
-void exit() noexcept {
+void term(err e) noexcept {
+    if (!e) sys::exit({});
+
+    LM_ERR("{}", e);
+    LM_TERM(e.ter());
+}
+
+void term() noexcept {
     // ...
     sys::exit({});
 }
 
 void unreach(Trace &&t, strv msg) noexcept {
-    LM_INFO("{} : {}", t.file, t.line);
+    LM_TRC("{} : {}", t.file, t.line);
     LM_ERR("{}", msg);
-    LM_EXIT(exitc::UNREACHABLE);
+    LM_TERM(ter::UNREACH);
 }
 
 void unreach(Trace &&t) noexcept {
-    LM_INFO("{} : {}", t.file, t.line);
-    LM_EXIT(exitc::UNREACHABLE);
+    LM_TRC("{} : {}", t.file, t.line);
+    LM_TERM(ter::UNREACH);
 }
 
 void unreach(strv msg) noexcept {
     LM_ERR("{}", msg);
-    LM_EXIT(exitc::UNREACHABLE);
+    LM_TERM(ter::UNREACH);
 }
 
 void unreach() noexcept {
     // ...
-    LM_EXIT(exitc::UNREACHABLE);
+    LM_TERM(ter::UNREACH);
 }
 
-void runassert(Trace &&t, bool c, strv s, strv msg) noexcept {
+void check(Trace &&t, bool c, strv s, strv msg) noexcept {
     if (c) return;
 
-    LM_INFO("{} : {}", t.file, t.line);
-    LM_INFO("{}", s);
+    LM_TRC("{} : {}", t.file, t.line);
+    LM_TRC("'{}'", s);
     LM_ERR("{}", msg);
-    LM_EXIT(exitc::ASSERT);
+    LM_TERM(ter::CHECK);
 }
 
-void runassert(Trace &&t, bool c, strv s) noexcept {
+void check(Trace &&t, bool c, strv s) noexcept {
     if (c) return;
 
-    LM_INFO("{} : {}", t.file, t.line);
-    LM_INFO("{}", s);
-    LM_EXIT(exitc::ASSERT);
+    LM_TRC("{} : {}", t.file, t.line);
+    LM_TRC("'{}'", s);
+    LM_TERM(ter::CHECK);
 }
 
-void runassert(bool c, strv s, strv msg) noexcept {
+void check(bool c, strv s, strv msg) noexcept {
     if (c) return;
 
-    LM_INFO("{}", s);
+    LM_TRC("'{}'", s);
     LM_ERR("{}", msg);
-    LM_EXIT(exitc::ASSERT);
+    LM_TERM(ter::CHECK);
 }
 
-void runassert(bool c, strv s) noexcept {
+void check(bool c, strv s) noexcept {
     if (c) return;
 
-    LM_INFO("{}", s);
-    LM_EXIT(exitc::ASSERT);
+    LM_TRC("'{}'", s);
+    LM_TERM(ter::CHECK);
 }
 
 } // namespace lm

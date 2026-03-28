@@ -80,7 +80,7 @@ public:
     constexpr void                         res(usz cap) noexcept;
     constexpr void                         ensure(usz len) noexcept;
 
-    template<typename... U> constexpr void emplace(U &&...args) noexcept;
+    template<typename... U> constexpr void empl(U &&...args) noexcept;
     constexpr void                         push(const T &val) noexcept;
     constexpr void                         push(T &&val) noexcept;
     constexpr void                         pop() noexcept;
@@ -341,9 +341,9 @@ constexpr void List<T, A>::ensure(usz len) noexcept {
 
 template<typename T, Alloc A>
 template<typename... U>
-constexpr void List<T, A>::emplace(U &&...args) noexcept {
+constexpr void List<T, A>::empl(U &&...args) noexcept {
     ensure(len_ + 1);
-    mem::construct(arr_ + len_, fwd(args)...);
+    mem::construct(arr_ + len_, fwd<U>(args)...);
     len_++;
 }
 
@@ -365,7 +365,7 @@ template<typename T, Alloc A> constexpr void List<T, A>::pop() noexcept {
     if (len_ == 0) return;
 
     len_--;
-    mem::destroy(arr_ + len_);
+    mem::destruct(arr_ + len_);
 }
 
 } // namespace impl

@@ -26,7 +26,7 @@ namespace sys {
 err write(sink s, strv v) noexcept {
     const isz w = ::write(static_cast<int>(s), v.data(), v.len());
 
-    if (w < 0) return errc::SYS_WRITE_FAIL;
+    if (w < 0) return err::SYS_WRITE_FAIL;
 
     return {};
 }
@@ -45,12 +45,12 @@ void *mmap(usz len) noexcept {
 err munmap(void *ptr, usz len) noexcept {
     const int r = ::munmap(ptr, len);
 
-    if (r < 0) return errc::SYS_MUNMAP_FAIL;
+    if (r < 0) return err::SYS_MUNMAP_FAIL;
 
     return {};
 }
 
-void exit(exitc c) noexcept { ::_exit(static_cast<int>(c)); }
+void exit(terc c) noexcept { ::_exit(static_cast<int>(c)); }
 
 } // namespace sys
 } // namespace srr

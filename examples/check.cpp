@@ -15,8 +15,8 @@
 #include <srr/types.hpp>
 
 i32 main() noexcept {
-    LM_ASSERT(1 == 1, "This will pass");
-    LM_ASSERT(1 != 1, "This will not pass");
+    LM_CHECK(1 == 1, "This will pass");
+    LM_CHECK(1 != 1, "This will not pass");
 
     LM_UNREACH();
 }

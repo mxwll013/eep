@@ -49,11 +49,14 @@ srr_mem="src/srr/mem"
 
 lm_panic="src/lm/panic"
 
+chrl_cli="src/chrl/cli"
+
 ts_ctr="tests/ctr"
 ts_mem="tests/mem"
 
 ex_alloc="examples/alloc"
-ex_assert="examples/assert"
+ex_check="examples/check"
+ex_cli="examples/cli"
 ex_format="examples/format"
 ex_hello_world="examples/hello_world"
 ex_list="examples/list"
@@ -67,11 +70,14 @@ compile "$srr_mem"
 
 compile "$lm_panic"
 
+compile "$chrl_cli"
+
 compile "$ts_ctr"
 compile "$ts_mem"
 
 compile "$ex_alloc"
-compile "$ex_assert"
+compile "$ex_check"
+compile "$ex_cli"
 compile "$ex_format"
 compile "$ex_hello_world"
 compile "$ex_list"
@@ -81,12 +87,14 @@ compile "$ex_str"
 
 lib "srr" "${srr_sys}.o" "${srr_mem}.o" "${srr_impl_alloc}.o"
 lib "lm" "${lm_panic}.o"
+lib "chrl" "${chrl_cli}.o"
 
 exe "$ts_ctr" "srr" "lm"
 exe "$ts_mem" "srr" "lm"
 
 exe "$ex_alloc" "srr" "lm"
-exe "$ex_assert" "srr" "lm"
+exe "$ex_check" "srr" "lm"
+exe "$ex_cli" "srr" "lm" "chrl"
 exe "$ex_format" "srr" "lm"
 exe "$ex_hello_world" "srr" "lm"
 exe "$ex_list" "srr" "lm"

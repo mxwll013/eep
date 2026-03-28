@@ -21,11 +21,11 @@ i32 main() noexcept {
 
     for (const char c : s1) s2.push(c);
 
-    LM_ASSERT(s1.prefix("Hello"));
-    LM_ASSERT(s1.suffix("world!"));
+    LM_CHECK(s1.prefix("Hello"));
+    LM_CHECK(s1.suffix("world!"));
 
-    LM_ASSERT(s2.prefix("Hello"));
-    LM_ASSERT(s2.suffix("world!"));
+    LM_CHECK(s2.prefix("Hello"));
+    LM_CHECK(s2.suffix("world!"));
 
     LM_DBG("[s1] len = {}", s1.len());
     LM_DBG("[s1] cap = {}", s1.cap());
@@ -36,5 +36,5 @@ i32 main() noexcept {
     LM_DBG("[s1] '{}'", s1);
     LM_DBG("[s2] '{}'", s2);
 
-    LM_EXIT();
+    LM_TERM();
 }

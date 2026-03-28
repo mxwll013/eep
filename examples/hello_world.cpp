@@ -16,5 +16,5 @@
 
 i32 main() noexcept {
     LM_LOG("Hello, world!");
-    LM_EXIT();
+    LM_TERM();
 }

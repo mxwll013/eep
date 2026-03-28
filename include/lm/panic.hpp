@@ -14,10 +14,9 @@
 #ifndef LM_PANIC_HPP_
 #define LM_PANIC_HPP_
 
-#include "srr/types.hpp"
-
 #include <srr/err.hpp>
 #include <srr/str.hpp>
+#include <srr/types.hpp>
 
 namespace lm {
 
@@ -33,18 +32,19 @@ struct Trace {
 [[noreturn]] void panic(err e) noexcept;
 [[noreturn]] void panic() noexcept;
 
-[[noreturn]] void exit(exitc c) noexcept;
-[[noreturn]] void exit() noexcept;
+[[noreturn]] void term(ter e) noexcept;
+[[noreturn]] void term(err e) noexcept;
+[[noreturn]] void term() noexcept;
 
 [[noreturn]] void unreach(Trace &&t, strv msg) noexcept;
 [[noreturn]] void unreach(Trace &&t) noexcept;
 [[noreturn]] void unreach(strv msg) noexcept;
 [[noreturn]] void unreach() noexcept;
 
-void              runassert(Trace &&t, bool c, strv s, strv msg) noexcept;
-void              runassert(Trace &&t, bool c, strv s) noexcept;
-void              runassert(bool c, strv s, strv msg) noexcept;
-void              runassert(bool c, strv s) noexcept;
+void              check(Trace &&t, bool c, strv s, strv msg) noexcept;
+void              check(Trace &&t, bool c, strv s) noexcept;
+void              check(bool c, strv s, strv msg) noexcept;
+void              check(bool c, strv s) noexcept;
 
 } // namespace lm
 

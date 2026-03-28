@@ -23,11 +23,11 @@ i32 main() noexcept {
 
     const usz  m = buf.copy("Hello, world!");
 
-    LM_ASSERT(n == m);
+    LM_CHECK(n == m);
 
     LM_LOG("{}", buf);
 
     mem::dealloc(buf.data(), n);
 
-    LM_EXIT();
+    LM_TERM();
 }

@@ -15,10 +15,15 @@
 #include <srr/types.hpp>
 
 i32 main() noexcept {
-    LM_LOG("Basic log");
-    LM_INFO("Important info");
-    LM_DBG("Debug message");
+    LM_LOG("Bare");
+    LM_INFO("Information");
+    LM_TRC("Trace");
+    LM_DBG("Debug");
     LM_WARN("Warning");
     LM_ERR("Error");
     LM_PAN("Panic");
+
+    LM_QRY("Query");
+
+    LM_TERM();
 }

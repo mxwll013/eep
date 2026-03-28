@@ -43,7 +43,7 @@ err                 write(sink s, strv v) noexcept;
 [[nodiscard]] void *mmap(usz len) noexcept;
 err                 munmap(void *ptr, usz len) noexcept;
 
-[[noreturn]] void   exit(exitc c) noexcept;
+[[noreturn]] void   exit(terc c) noexcept;
 
 } // namespace sys
 } // namespace srr
