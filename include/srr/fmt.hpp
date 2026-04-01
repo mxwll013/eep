@@ -14,23 +14,53 @@
 #ifndef SRR_FMT_HPP_
 #define SRR_FMT_HPP_
 
+#include "srr/impl/Fmter.hpp"
+
+inline namespace srr {
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+using fmter = impl::Fmter<byte>;
+// NOLINTEND(readability-identifier-naming)
+
+constexpr void                 fmt(fmter &buf, nil v) noexcept;
+constexpr void                 fmt(fmter &buf, bool v) noexcept;
+constexpr void                 fmt(fmter &buf, byte v) noexcept;
+
+// constexpr void fmt(fmter &buf, f32 v) noexcept;
+// constexpr void fmt(fmter &buf, f64 v) noexcept;
+
+constexpr void                 fmt(fmter &buf, ter v) noexcept;
+constexpr void                 fmt(fmter &buf, err v) noexcept;
+
+template<usz N> constexpr void fmt(fmter &buf, const byte (&v)[N]) noexcept;
+constexpr void                 fmt(fmter &buf, strv v) noexcept;
+// constexpr void fmt(fmter &buf, strb v) noexcept;
+// constexpr void fmt(fmter &buf, const str &v) noexcept;
+
+template<typename T>
+    requires is_int_v<T>
+constexpr void fmt(fmter &buf, T v) noexcept;
+
+} // namespace srr
+
 #include "srr/impl/Fmt.hpp"
 
 #include "srr/err.hpp"
-#include "srr/intr.hpp"
 #include "srr/str.hpp"
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
 
 inline namespace srr {
 
-// NOLINTBEGIN(readability-identifier-naming)
-
 template<typename T>
-concept StrFmtable                     = impl::Fmtable<byte, T>;
+concept Fmtable                        = impl::Fmtable<byte, T>;
+
+// NOLINTBEGIN(readability-identifier-naming)
 
 // Format string
 template<typename... U> using fmt_str  = impl::Fmt<byte, U...>;
+
+// NOLINTEND(readability-identifier-naming)
 
 // === impl ===
 
@@ -45,65 +75,49 @@ static constexpr fx_str<200> DIGIT_LUT = "00010203040506070809"
                                          "80818283848586878889"
                                          "90919293949596979899";
 
-constexpr usz fmt(const strb &buf, [[maybe_unused]] nil v) noexcept {
-    return buf.copy("nullptr");
+constexpr void               fmt(fmter &buf, [[maybe_unused]] nil v) noexcept {
+    buf.push("(null)");
 }
 
-constexpr usz fmt(const strb &buf, bool v) noexcept {
-    const strv s = v ? "true" : "false";
-    return buf.copy(s);
+constexpr void fmt(fmter &buf, bool v) noexcept {
+    buf.push(v ? "true" : "false");
 }
 
-constexpr usz fmt(const strb &buf, byte v) noexcept {
-    buf[0] = v;
-    return 1;
-}
+constexpr void fmt(fmter &buf, byte v) noexcept { buf.push(v); }
 
-// constexpr usz fmt(const strb &buf, f32 v) noexcept;
-// constexpr usz fmt(const strb &buf, f64 v) noexcept;
+// constexpr void fmt(fmter &buf, f32 v) noexcept;
+// constexpr void fmt(fmter &buf, f64 v) noexcept;
 
-constexpr usz fmt(const strb &buf, ter v) noexcept { return buf.copy(v.msg()); }
+constexpr void fmt(fmter &buf, ter v) noexcept { buf.push(v.msg()); }
 
-constexpr usz fmt(const strb &buf, err v) noexcept {
-    usz        n  = buf.copy(v.msg());
+constexpr void fmt(fmter &buf, err v) noexcept {
+    buf.push(v.msg());
 
     const strv tr = v.trace();
 
-    if (tr) {
-        buf[n++]  = ' ';
-        buf[n++]  = '\'';
-        n        += buf.span(n).copy(tr);
-
-        buf[n++]  = '\'';
+    if (!tr.empty()) {
+        buf.push(" '");
+        buf.push(tr);
+        buf.push("'");
     }
-
-    return n;
 }
 
-template<usz N>
-constexpr usz fmt(const strb &buf, const byte (&v)[N]) noexcept {
-    return buf.copy(v);
+template<usz N> constexpr void fmt(fmter &buf, const byte (&v)[N]) noexcept {
+    buf.push(v);
 }
 
-constexpr usz fmt(const strb &buf, strv v) noexcept { return buf.copy(v); }
-
-constexpr usz fmt(const strb &buf, strb v) noexcept { return buf.copy(v); }
-
-constexpr usz fmt(const strb &buf, const str &v) noexcept {
-    return buf.copy(v);
-}
+constexpr void fmt(fmter &buf, strv v) noexcept { buf.push(v); }
 
 template<typename T>
-    requires intr::is_int_v<T>
-constexpr usz fmt(const strb &buf, T v) noexcept {
+    requires is_int_v<T>
+constexpr void fmt(fmter &buf, T v) noexcept {
     using U = mk_u_t<T>;
-    U   u;
-    usz i = 0;
+    U u;
 
     if constexpr (is_s_v<T>) {
         if (v < 0) {
-            buf[i++] = '-';
-            u        = 0 - static_cast<U>(v);
+            buf.push('-');
+            u = 0 - static_cast<U>(v);
         } else {
             u = static_cast<U>(v);
         }
@@ -133,12 +147,8 @@ constexpr usz fmt(const strb &buf, T v) noexcept {
         *--p    = DIGIT_LUT[idx];
     }
 
-    for (; p < rev.end(); ++p) buf[i++] = *p;
-
-    return i;
+    for (; p < rev.end(); ++p) buf.push(*p);
 }
-
-// NOLINTEND(readability-identifier-naming)
 
 } // namespace srr
 

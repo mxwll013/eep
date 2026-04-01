@@ -14,6 +14,8 @@
 #ifndef SRR_IMPL_SPAN_HPP_
 #define SRR_IMPL_SPAN_HPP_
 
+#include "srr/impl/lang.hpp"
+
 #include "srr/mem.hpp"
 #include "srr/types.hpp"
 
@@ -22,15 +24,18 @@ namespace impl {
 
 template<typename T> class Span {
 public:
-    // NOLINTNEXTLINE(readability-identifier-naming)
-    using val_t = T;
+    // NOLINTBEGIN(readability-identifier-naming)
+
+    using val_t   = T;
+    using alias_t = Span<rm_c_t<T>>;
+
+    // NOLINTEND(readability-identifier-naming)
 
     constexpr Span() noexcept;
     constexpr Span(T *p) noexcept;
     constexpr Span(T *p, usz n) noexcept;
     template<usz N> constexpr Span(T (&arr)[N + 1]) noexcept;
 
-    constexpr                       operator bool() const noexcept;
     constexpr                       operator Span<const T>() const noexcept;
 
     [[nodiscard]] constexpr usz     len() const noexcept;
@@ -86,10 +91,6 @@ constexpr Span<T>::Span(T *p, usz n) noexcept : p_{ p }, len_{ n } {}
 template<typename T>
 template<usz N>
 constexpr Span<T>::Span(T (&arr)[N + 1]) noexcept : p_{ arr }, len_{ N } {}
-
-template<typename T> constexpr Span<T>::operator bool() const noexcept {
-    return p_ != nullptr;
-}
 
 template<typename T>
 constexpr Span<T>::operator Span<const T>() const noexcept {

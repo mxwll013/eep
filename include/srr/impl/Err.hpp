@@ -33,6 +33,7 @@ public:
         CHECK,
 
         SYS,
+        FMT,
         CLI,
 
         TERC_COUNT,
@@ -85,6 +86,9 @@ public:
         SYS_IO,
         SYS_PIPE,
 
+        FMT_FAIL,
+        FMT_OVERFLOW,
+
         CLI_BAD_USAGE,
         CLI_TOO_MANY_ARGS,
         CLI_BAD_CMD,
@@ -126,7 +130,7 @@ static constexpr usz ERRC_COUNT = static_cast<usz>(Err::Code::ERRC_COUNT);
 
 static constexpr arr<strv, TERC_COUNT> STR_TERC = {
     "Ok",          "Generic error", "Generic panic", "Unreach panic",
-    "Check panic", "System error",  "CLI error",
+    "Check panic", "System error",  "Format error",  "CLI error",
 };
 
 static constexpr arr<strv, ERRC_COUNT> STR_ERRC = {
@@ -155,6 +159,9 @@ static constexpr arr<strv, ERRC_COUNT> STR_ERRC = {
 
     "I/O error.",
     "Broken pipe.",
+
+    "Unknown format error.",
+    "Format buffer overflow.",
 
     "Invalid usage.",
     "Too many arguments.",
@@ -185,6 +192,9 @@ static constexpr arr<Ter::Code, ERRC_COUNT> ERRC_2_TERC = {
     Ter::SYS,  // Err::SYS_PERM
     Ter::SYS,  // Err::SYS_IO
     Ter::SYS,  // Err::SYS_PIPE
+
+    Ter::FMT,  // Err::FMT_FAIL
+    Ter::FMT,  // Err::FMT_OVERFLOW
 
     Ter::CLI,  // Err::CLI_BAD_USAGE
     Ter::CLI,  // Err::CLI_TOO_MANY_ARGS

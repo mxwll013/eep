@@ -15,40 +15,24 @@
 #define SRR_IMPL_FMT_HPP_
 
 #include "srr/impl/Arr.hpp"
+#include "srr/impl/Fmter.hpp"
 #include "srr/impl/Span.hpp"
+#include "srr/impl/traits.hpp"
 
-#include "srr/err.hpp"
-#include "srr/intr.hpp"
-#include "srr/str.hpp"
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
 
 inline namespace srr {
-
-constexpr usz                 fmt(const strb &buf, nil v) noexcept;
-constexpr usz                 fmt(const strb &buf, bool v) noexcept;
-constexpr usz                 fmt(const strb &buf, byte v) noexcept;
-
-// constexpr usz fmt(const strb &buf, f32 v) noexcept;
-// constexpr usz fmt(const strb &buf, f64 v) noexcept;
-
-constexpr usz                 fmt(const strb &buf, ter v) noexcept;
-constexpr usz                 fmt(const strb &buf, err v) noexcept;
-
-template<usz N> constexpr usz fmt(const strb &buf, const byte (&v)[N]) noexcept;
-constexpr usz                 fmt(const strb &buf, strv v) noexcept;
-constexpr usz                 fmt(const strb &buf, strb v) noexcept;
-constexpr usz                 fmt(const strb &buf, const str &v) noexcept;
-
-template<typename T>
-    requires intr::is_int_v<T>
-constexpr usz fmt(const strb &buf, T v) noexcept;
-
 namespace impl {
 
 template<typename T, typename U>
-concept Fmtable = requires(const Span<T> &buf, const U &u) {
-    { fmt(buf, u) } noexcept -> Same<usz>;
+concept Fmtable = requires(Fmter<T> &buf, const U &u) {
+    { fmt(buf, u) } noexcept -> Same<void>;
+};
+
+struct Seg {
+    usz start;
+    usz end;
 };
 
 template<typename T, typename... U>
@@ -57,24 +41,22 @@ class Fmt {
 public:
     template<usz M> consteval Fmt(const T (&p)[M]) noexcept;
 
-    [[nodiscard]] constexpr usz apply(Span<T> buf,
-                                      const U &...args) const noexcept;
+    constexpr void apply(Fmter<T> &buf, const U &...args) const noexcept;
 
 private:
-    static constexpr usz  N = sizeof...(U);
+    static constexpr usz N = sizeof...(U);
 
-    Span<const T>         str_{};
-    Arr<usz, (N + 1) * 2> segs_{};
+    Span<const T>        str_{};
+    Arr<Seg, N + 1>      segs_{};
 
-    consteval void        parse();
+    consteval void       parse();
 
-    constexpr usz         build(Span<T> buf, usz seg) const noexcept;
+    constexpr void       seg(Fmter<T> &buf, usz i) const noexcept;
 
-    template<typename V, typename... W>
-    constexpr usz build(Span<T>  buf,
-                        usz      seg,
-                        const V &arg,
-                        const W &...args) const noexcept;
+    template<usz... I>
+    constexpr void build(Fmter<T> &buf,
+                         idx_seq<I...> /*unused*/,
+                         const U &...args) const noexcept;
 };
 
 // === impl ===
@@ -89,65 +71,56 @@ consteval Fmt<T, U...>::Fmt(const T (&p)[M]) noexcept : str_{ p, M-1 } {
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
-constexpr usz Fmt<T, U...>::apply(Span<T> buf,
-                                  const U &...args) const noexcept {
-    return build(buf, 0, args...);
+constexpr void Fmt<T, U...>::apply(Fmter<T> &buf,
+                                   const U &...args) const noexcept {
+    return build(buf, mk_idx_seq_for_t<U...>{}, args...);
 }
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
 consteval void Fmt<T, U...>::parse() {
     usz n    = 0;
-    segs_[0] = 0;
+    usz last = 0;
 
     for (usz i = 0; i < str_.len(); i++) {
-        if (str_[i] == '}') throw "Unmatched '}' in format string!";
+        if (str_[i] == '}') throw "Unmatched '}'!";
         if (str_[i] != '{') continue;
         ++i;
 
-        if (i >= str_.len()) throw "Unexpected end of format string after '{'!";
+        if (i >= str_.len()) throw "Unexpected end after '{'!";
 
         if (str_[i] == '{') continue;
 
-        if (str_[i] != '}') throw "Expected '}' after '{' in format string!";
+        if (str_[i] != '}') throw "Expected '}' after '{'!";
 
-        if (n >= N) throw "Too many format specifiers in format string!";
+        if (n >= N) throw "Too many format specifiers!";
 
-        segs_[(n * 2) + 1] = i - 1; // End of last segment
-        ++n;
-        segs_[(n * 2)] = i + 1;     // Start of next segment
+        segs_[n++] = { last, i - 1 };
+        last       = i + 1;
     }
 
-    if (n != N)
-        throw "Number of format specifiers in format string does not match "
-              "number of arguments!";
+    if (n != N) throw "Wrong number of arguments!";
 
-    segs_[(N * 2) + 1] = str_.len();
+    segs_[n] = { last, str_.len() };
 }
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
-constexpr usz Fmt<T, U...>::build(Span<T> buf, usz seg) const noexcept {
-    usz s = segs_[seg * 2];
-    usz e = segs_[(seg * 2) + 1];
-
-    return buf.copy(str_.span(s, e));
+constexpr void Fmt<T, U...>::seg(Fmter<T> &buf, usz i) const noexcept {
+    buf.push(str_.span(segs_[i].start, segs_[i].end));
 }
 
 template<typename T, typename... U>
     requires(Fmtable<T, U> && ...)
-template<typename V, typename... W>
-constexpr usz Fmt<T, U...>::build(Span<T>  buf,
-                                  usz      seg,
-                                  const V &arg,
-                                  const W &...args) const noexcept {
-    usz n  = build(buf, seg);
-    n     += fmt(buf.span(n), arg);
-    return n + build(buf.span(n), seg + 1, args...);
+template<usz... I>
+constexpr void Fmt<T, U...>::build(Fmter<T> &buf,
+                                   idx_seq<I...> /*unused*/,
+                                   const U &...args) const noexcept {
+    ((seg(buf, I), fmt(buf, args)), ...);
+    seg(buf, N);
 }
 
 } // namespace impl
-
 } // namespace srr
 
 #endif // SRR_IMPL_FMT_HPP_

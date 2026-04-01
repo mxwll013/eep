@@ -16,6 +16,8 @@
 
 #include "lm/impl/buf.hpp"
 
+#include "srr/err.hpp"
+
 #include <srr/fmt.hpp>
 #include <srr/str.hpp>
 #include <srr/sys.hpp>
@@ -54,36 +56,47 @@ template<> inline constexpr strv TYPE_STR<Type::ERR> = SRR_RED("Err") ":   ";
 template<> inline constexpr strv TYPE_STR<Type::PAN> = SRR_RED("Panic") ": ";
 
 template<Type T, typename... U>
-    requires(StrFmtable<U> && ...)
+    requires(Fmtable<U> && ...)
 void log(const fmt_str<no_deduce_t<U>...> &fmt, U &&...args) {
-    const strb buf  = impl::fmt_buf;
+    fmter out = impl::fmt_buf.span();
 
-    usz        n    = buf.copy(TYPE_STR<T>);
+    out.push(TYPE_STR<T>);
 
-    n              += fmt.apply(buf.span(n), args...);
+    fmt.apply(out, args...);
 
-    buf[n++]        = '\n';
-    buf[n]          = '\0';
+    out.push("\n\0");
 
-    sys::write(TYPE_FD<T>, buf.span(0, n));
+    const res<strv> r = out.done();
+
+    if (r.ok()) sys::write(TYPE_FD<T>, r.unwrap());
 }
 
 template<Type T, typename... U>
-    requires(StrFmtable<U> && ...)
+    requires(Fmtable<U> && ...)
 bool query(const fmt_str<no_deduce_t<U>...> &fmt, U &&...args) {
-    const strb buf  = impl::fmt_buf;
+    fmter      out = impl::fmt_buf.span();
+    const strb in  = impl::query_buf;
 
-    usz        n    = buf.copy(TYPE_STR<T>);
+    out.push(TYPE_STR<T>);
 
-    n              += fmt.apply(buf.span(n), args...);
+    fmt.apply(out, args...);
 
-    n              += buf.span(n).copy("? (y/n) \0");
+    out.push("? (y/n) \0");
 
-    sys::write(TYPE_FD<T>, buf.span(0, n));
+    const res<strv> r = out.done();
 
-    // TODO: read input
+    if (r.bad()) return false;
 
-    return true;
+    sys::write(TYPE_FD<T>, r.unwrap());
+
+    sys::read(sys::CIN, in);
+
+    switch (in[0]) {
+    case '\n': [[fallthrough]];
+    case 'y' : [[fallthrough]];
+    case 'Y' : return true;
+    default  : return false;
+    }
 }
 
 } // namespace lm

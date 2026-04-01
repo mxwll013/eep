@@ -14,6 +14,8 @@
 #ifndef SRR_IMPL_RES_HPP_
 #define SRR_IMPL_RES_HPP_
 
+#include "srr/impl/lang.hpp"
+
 #include "srr/mem.hpp"
 #include "srr/traits.hpp"
 
@@ -27,10 +29,16 @@ public:
     constexpr Res &operator=(Res &&) noexcept      = delete;
 
     constexpr Res(Res &&r) noexcept;
-    constexpr Res(const alias_t<E> &err) noexcept;
-    constexpr Res(alias_t<E> &&err) noexcept;
+    constexpr Res(const alias_t<E> &err) noexcept
+        requires Aliased<E>;
+    constexpr Res(alias_t<E> &&err) noexcept
+        requires Aliased<E>;
     constexpr Res(const E &err) noexcept;
     constexpr Res(E &&err) noexcept;
+    constexpr Res(const alias_t<T> &val) noexcept
+        requires Aliased<T>;
+    constexpr Res(alias_t<T> &&val) noexcept
+        requires Aliased<T>;
     constexpr Res(const T &val) noexcept;
     constexpr Res(T &&val) noexcept;
     constexpr ~Res() noexcept;
@@ -75,12 +83,16 @@ constexpr Res<T, E>::Res(Res &&r) noexcept : ok_{ r.ok_ } {
 }
 
 template<typename T, typename E>
-constexpr Res<T, E>::Res(const alias_t<E> &err) noexcept : ok_{ false } {
+constexpr Res<T, E>::Res(const alias_t<E> &err) noexcept
+    requires Aliased<E>
+    : ok_{ false } {
     mem::construct(&u_.err, err);
 }
 
 template<typename T, typename E>
-constexpr Res<T, E>::Res(alias_t<E> &&err) noexcept : ok_{ false } {
+constexpr Res<T, E>::Res(alias_t<E> &&err) noexcept
+    requires Aliased<E>
+    : ok_{ false } {
     mem::construct(&u_.err, mv(err));
 }
 
@@ -92,6 +104,20 @@ constexpr Res<T, E>::Res(const E &err) noexcept : ok_{ false } {
 template<typename T, typename E>
 constexpr Res<T, E>::Res(E &&err) noexcept : ok_{ false } {
     mem::construct(&u_.err, mv(err));
+}
+
+template<typename T, typename E>
+constexpr Res<T, E>::Res(const alias_t<T> &val) noexcept
+    requires Aliased<T>
+    : ok_{ true } {
+    mem::construct(&u_.val, val);
+}
+
+template<typename T, typename E>
+constexpr Res<T, E>::Res(alias_t<T> &&val) noexcept
+    requires Aliased<T>
+    : ok_{ true } {
+    mem::construct(&u_.val, mv(val));
 }
 
 template<typename T, typename E>
