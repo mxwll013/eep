@@ -44,6 +44,7 @@ mkdir -p build/obj
 
 
 srr_impl_alloc="src/srr/impl/Alloc"
+srr_impl_freelist="src/srr/impl/Freelist"
 srr_sys="src/srr/sys"
 srr_mem="src/srr/mem"
 
@@ -65,6 +66,7 @@ ex_result="examples/result"
 ex_str="examples/str"
 
 compile "$srr_impl_alloc"
+compile "$srr_impl_freelist"
 compile "$srr_sys"
 compile "$srr_mem"
 
@@ -85,9 +87,17 @@ compile "$ex_logging"
 compile "$ex_result"
 compile "$ex_str"
 
-lib "srr" "${srr_sys}.o" "${srr_mem}.o" "${srr_impl_alloc}.o"
-lib "lm" "${lm_panic}.o"
-lib "chrl" "${chrl_cli}.o"
+lib "srr"  \
+"${srr_sys}.o" \
+"${srr_mem}.o" \
+"${srr_impl_alloc}.o" \
+"${srr_impl_freelist}.o"
+
+lib "lm" \
+"${lm_panic}.o"
+
+lib "chrl" \
+"${chrl_cli}.o"
 
 exe "$ts_ctr" "srr" "lm"
 exe "$ts_mem" "srr" "lm"

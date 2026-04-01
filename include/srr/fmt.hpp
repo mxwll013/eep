@@ -17,6 +17,7 @@
 #include "srr/impl/Fmt.hpp"
 
 #include "srr/err.hpp"
+#include "srr/intr.hpp"
 #include "srr/str.hpp"
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
@@ -26,10 +27,10 @@ inline namespace srr {
 // NOLINTBEGIN(readability-identifier-naming)
 
 template<typename T>
-concept StrFmtable                     = impl::Fmtable<char, T>;
+concept StrFmtable                     = impl::Fmtable<byte, T>;
 
 // Format string
-template<typename... U> using fmt_str  = impl::Fmt<char, U...>;
+template<typename... U> using fmt_str  = impl::Fmt<byte, U...>;
 
 // === impl ===
 
@@ -53,7 +54,7 @@ constexpr usz fmt(const strb &buf, bool v) noexcept {
     return buf.copy(s);
 }
 
-constexpr usz fmt(const strb &buf, char v) noexcept {
+constexpr usz fmt(const strb &buf, byte v) noexcept {
     buf[0] = v;
     return 1;
 }
@@ -80,7 +81,7 @@ constexpr usz fmt(const strb &buf, err v) noexcept {
 }
 
 template<usz N>
-constexpr usz fmt(const strb &buf, const char (&v)[N]) noexcept {
+constexpr usz fmt(const strb &buf, const byte (&v)[N]) noexcept {
     return buf.copy(v);
 }
 
@@ -92,12 +93,14 @@ constexpr usz fmt(const strb &buf, const str &v) noexcept {
     return buf.copy(v);
 }
 
-template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept {
-    using U = mk_uint_t<I>;
+template<typename T>
+    requires intr::is_int_v<T>
+constexpr usz fmt(const strb &buf, T v) noexcept {
+    using U = mk_u_t<T>;
     U   u;
     usz i = 0;
 
-    if constexpr (is_sint_v<I>) {
+    if constexpr (is_s_v<T>) {
         if (v < 0) {
             buf[i++] = '-';
             u        = 0 - static_cast<U>(v);
@@ -112,7 +115,7 @@ template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept {
     fx_str<32> rev;
 
     // NOLINTNEXTLINE(misc-const-correctness)
-    char      *p = rev.end();
+    byte      *p = rev.end();
 
     while (u >= 100) {
         usz idx  = (u % 100) * 2;
@@ -123,7 +126,7 @@ template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept {
     }
 
     if (u < 10) {
-        *--p = static_cast<char>(u + '0');
+        *--p = static_cast<byte>(u + '0');
     } else {
         usz idx = u * 2;
         *--p    = DIGIT_LUT[idx + 1];

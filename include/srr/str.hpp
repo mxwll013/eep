@@ -35,20 +35,20 @@ inline namespace srr {
 
 // NOLINTBEGIN(readability-identifier-naming)
 
-template<typename T, mem::Alloc A = mem::base_alloc<char>>
+template<typename T, mem::Alloc A = mem::base_alloc<byte>>
 using base_str               = impl::Str<T, A>;
 
 // String (owning, mutable)
-using str                    = base_str<char>;
+using str                    = base_str<byte>;
 
 // String buffer (mutable)
-using strb                   = impl::Span<char>;
+using strb                   = impl::Span<byte>;
 
 // String view (immutable)
-using strv                   = impl::Span<const char>;
+using strv                   = impl::Span<const byte>;
 
 // Fixed string
-template<usz N> using fx_str = impl::Arr<char, N>;
+template<usz N> using fx_str = impl::Arr<byte, N>;
 
 // NOLINTEND(readability-identifier-naming)
 

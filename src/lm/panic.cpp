@@ -68,7 +68,7 @@ void term(ter e) noexcept {
 }
 
 void term(err e) noexcept {
-    if (!e) sys::exit({});
+    if (!e) sys::exit();
 
     LM_ERR("{}", e);
     LM_TERM(e.ter());
@@ -76,7 +76,7 @@ void term(err e) noexcept {
 
 void term() noexcept {
     // ...
-    sys::exit({});
+    sys::exit();
 }
 
 void unreach(Trace &&t, strv msg) noexcept {

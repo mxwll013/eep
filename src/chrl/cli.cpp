@@ -68,7 +68,7 @@ res<cref<T>> fuzzy(span<const cref<T>> ctr, strv s) noexcept {
     return err::NOT_FOUND;
 }
 
-list<strv> handle(i32 argc, char **argv) noexcept {
+list<strv> handle(int argc, byte **argv) noexcept {
     const usz  n = static_cast<usz>(argc);
     list<strv> args{ n - 1 };
     for (usz i = 1; i < n; ++i) args.empl(argv[i]);
@@ -211,7 +211,7 @@ const Cli &Ctx::cli() const noexcept { return cli_; }
 
 Hook       Ctx::hook() const noexcept { return parsed_.path.last().get().hook; }
 
-void       entry(const Cli &cli, i32 argc, char **argv) noexcept {
+void       entry(const Cli &cli, int argc, byte **argv) noexcept {
     const list<strv> args = handle(argc, argv);
 
     const Ctx        ctx  = { cli, args };

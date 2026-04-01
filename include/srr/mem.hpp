@@ -15,6 +15,7 @@
 #define SRR_MEM_HPP_
 
 #include "srr/impl/Alloc.hpp"
+#include "srr/impl/FreeList.hpp"
 
 #include "srr/alg.hpp"
 #include "srr/intr.hpp"
@@ -35,6 +36,8 @@ concept Alloc                         = impl::Alloc<A>;
 using sys_alloc                       = impl::SysAlloc;
 
 template<typename T> using base_alloc = impl::BaseAlloc<T>;
+
+using free_list                       = impl::FreeList;
 
 // NOLINTEND(readability-identifier-naming)
 

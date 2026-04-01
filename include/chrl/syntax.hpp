@@ -41,7 +41,7 @@ struct Flag {
     strv   name;
     strv   desc;
     FlagId id   = 0;
-    char   shrt = 0;
+    byte   shrt = 0;
 };
 
 struct Parg {

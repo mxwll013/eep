@@ -19,7 +19,7 @@
 i32 main() noexcept {
     const usz  n = 13;
 
-    const strb buf{ mem::alloc<char>(n), n };
+    const strb buf{ mem::alloc<byte>(n), n };
 
     const usz  m = buf.copy("Hello, world!");
 

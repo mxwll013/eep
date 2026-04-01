@@ -35,7 +35,7 @@
 
 #define LM_TERM(...)     ::lm::term(__VA_ARGS__)
 
-#ifndef BRV_RELEASE
+#if !defined(BRV_RELEASE)
 
     #define LM_PANIC(...)                                                      \
         ::lm::panic(::lm::Trace{ __FILE__, __LINE__ } __VA_OPT__(, )           \

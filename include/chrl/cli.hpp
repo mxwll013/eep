@@ -22,7 +22,7 @@
 #include <srr/types.hpp>
 
 #define CHRL_ENTRY(...)                                                        \
-    i32 main(i32 argc, char **argv) noexcept {                                 \
+    int main(int argc, byte **argv) noexcept {                                 \
         chrl::entry((__VA_ARGS__), argc, argv);                                \
     }
 
@@ -53,7 +53,7 @@ private:
     Parsed    parsed_;
 };
 
-[[noreturn]] void entry(const Cli &cli, i32 argc, char **argv) noexcept;
+[[noreturn]] void entry(const Cli &cli, int argc, byte **argv) noexcept;
 
 } // namespace chrl
 

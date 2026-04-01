@@ -34,17 +34,17 @@ enum class Type : u8 {
     PAN,
 };
 
-template<Type T> constexpr sys::sink  TYPE_SINK             = {};
-template<> inline constexpr sys::sink TYPE_SINK<Type::BARE> = sys::COUT;
-template<> inline constexpr sys::sink TYPE_SINK<Type::INFO> = sys::COUT;
-template<> inline constexpr sys::sink TYPE_SINK<Type::TRC>  = sys::COUT;
-template<> inline constexpr sys::sink TYPE_SINK<Type::DBG>  = sys::COUT;
-template<> inline constexpr sys::sink TYPE_SINK<Type::WARN> = sys::CERR;
-template<> inline constexpr sys::sink TYPE_SINK<Type::ERR>  = sys::CERR;
-template<> inline constexpr sys::sink TYPE_SINK<Type::PAN>  = sys::CERR;
+template<Type T> constexpr sys::fd  TYPE_FD             = {};
+template<> inline constexpr sys::fd TYPE_FD<Type::BARE> = sys::COUT;
+template<> inline constexpr sys::fd TYPE_FD<Type::INFO> = sys::COUT;
+template<> inline constexpr sys::fd TYPE_FD<Type::TRC>  = sys::COUT;
+template<> inline constexpr sys::fd TYPE_FD<Type::DBG>  = sys::COUT;
+template<> inline constexpr sys::fd TYPE_FD<Type::WARN> = sys::CERR;
+template<> inline constexpr sys::fd TYPE_FD<Type::ERR>  = sys::CERR;
+template<> inline constexpr sys::fd TYPE_FD<Type::PAN>  = sys::CERR;
 
-template<Type T> constexpr strv       TYPE_STR;
-template<> inline constexpr strv      TYPE_STR<Type::BARE> = {};
+template<Type T> constexpr strv     TYPE_STR;
+template<> inline constexpr strv    TYPE_STR<Type::BARE> = {};
 template<> inline constexpr strv TYPE_STR<Type::INFO> = SRR_BLUE("Info") ":  ";
 template<> inline constexpr strv TYPE_STR<Type::TRC>  = SRR_CYAN("Trace") ": ";
 template<> inline constexpr strv TYPE_STR<Type::DBG>  = SRR_GREEN("Debug") ": ";
@@ -65,7 +65,7 @@ void log(const fmt_str<no_deduce_t<U>...> &fmt, U &&...args) {
     buf[n++]        = '\n';
     buf[n]          = '\0';
 
-    sys::write(TYPE_SINK<T>, buf.span(0, n));
+    sys::write(TYPE_FD<T>, buf.span(0, n));
 }
 
 template<Type T, typename... U>
@@ -79,7 +79,7 @@ bool query(const fmt_str<no_deduce_t<U>...> &fmt, U &&...args) {
 
     n              += buf.span(n).copy("? (y/n) \0");
 
-    sys::write(TYPE_SINK<T>, buf.span(0, n));
+    sys::write(TYPE_FD<T>, buf.span(0, n));
 
     // TODO: read input
 

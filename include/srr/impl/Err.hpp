@@ -65,8 +65,25 @@ public:
         INVALID_ARG,
         NOT_FOUND,
 
-        SYS_WRITE_FAIL,
-        SYS_MUNMAP_FAIL,
+        SYS_FAIL,
+
+        SYS_AGAIN,
+        SYS_INTER,
+
+        SYS_BAD_ARG,
+        SYS_BAD_FD,
+        SYS_BAD_ADDR,
+
+        SYS_NO_SPACE,
+        SYS_NO_MEM,
+        SYS_LARGE_FILE,
+        SYS_TOO_MANY_FILES,
+
+        SYS_ACCESS,
+        SYS_PERM,
+
+        SYS_IO,
+        SYS_PIPE,
 
         CLI_BAD_USAGE,
         CLI_TOO_MANY_ARGS,
@@ -119,8 +136,25 @@ static constexpr arr<strv, ERRC_COUNT> STR_ERRC = {
     "Invalid argument.",
     "Not found.",
 
-    "Failed on write.",
-    "Failed on unmap.",
+    "Unknown system error.",
+
+    "Resource temporarily unavailable.",
+    "Interrupted system call.",
+
+    "Invalid argument.",
+    "Bad file descriptor.",
+    "Bad address.",
+
+    "No space left on device.",
+    "Out of memory.",
+    "File too large.",
+    "Too many open files.",
+
+    "Permission denied.",
+    "Operation not perrmited.",
+
+    "I/O error.",
+    "Broken pipe.",
 
     "Invalid usage.",
     "Too many arguments.",
@@ -137,8 +171,20 @@ static constexpr arr<Ter::Code, ERRC_COUNT> ERRC_2_TERC = {
     Ter::FAIL, // Err::INVALID_ARG
     Ter::FAIL, // Err::NOT_FOUND
 
-    Ter::SYS,  // Err::SYS_WRITE_FAIL
-    Ter::SYS,  // Err::SYS_MUNMAP_FAIL
+    Ter::SYS,  // Err::SYS_FAIL
+    Ter::SYS,  // Err::SYS_AGAIN
+    Ter::SYS,  // Err::SYS_INTER
+    Ter::SYS,  // Err::SYS_BAD_ARG
+    Ter::SYS,  // Err::SYS_BAD_FD
+    Ter::SYS,  // Err::SYS_BAD_ADDR
+    Ter::SYS,  // Err::SYS_NO_SPACE
+    Ter::SYS,  // Err::SYS_NO_MEM
+    Ter::SYS,  // Err::SYS_LARGE_FILE
+    Ter::SYS,  // Err::SYS_TOO_MANY_FILES
+    Ter::SYS,  // Err::SYS_ACCESS
+    Ter::SYS,  // Err::SYS_PERM
+    Ter::SYS,  // Err::SYS_IO
+    Ter::SYS,  // Err::SYS_PIPE
 
     Ter::CLI,  // Err::CLI_BAD_USAGE
     Ter::CLI,  // Err::CLI_TOO_MANY_ARGS

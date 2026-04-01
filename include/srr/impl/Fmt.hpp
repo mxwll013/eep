@@ -18,6 +18,7 @@
 #include "srr/impl/Span.hpp"
 
 #include "srr/err.hpp"
+#include "srr/intr.hpp"
 #include "srr/str.hpp"
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
@@ -26,7 +27,7 @@ inline namespace srr {
 
 constexpr usz                 fmt(const strb &buf, nil v) noexcept;
 constexpr usz                 fmt(const strb &buf, bool v) noexcept;
-constexpr usz                 fmt(const strb &buf, char v) noexcept;
+constexpr usz                 fmt(const strb &buf, byte v) noexcept;
 
 // constexpr usz fmt(const strb &buf, f32 v) noexcept;
 // constexpr usz fmt(const strb &buf, f64 v) noexcept;
@@ -34,12 +35,14 @@ constexpr usz                 fmt(const strb &buf, char v) noexcept;
 constexpr usz                 fmt(const strb &buf, ter v) noexcept;
 constexpr usz                 fmt(const strb &buf, err v) noexcept;
 
-template<usz N> constexpr usz fmt(const strb &buf, const char (&v)[N]) noexcept;
+template<usz N> constexpr usz fmt(const strb &buf, const byte (&v)[N]) noexcept;
 constexpr usz                 fmt(const strb &buf, strv v) noexcept;
 constexpr usz                 fmt(const strb &buf, strb v) noexcept;
 constexpr usz                 fmt(const strb &buf, const str &v) noexcept;
 
-template<Int I> constexpr usz fmt(const strb &buf, I v) noexcept;
+template<typename T>
+    requires intr::is_int_v<T>
+constexpr usz fmt(const strb &buf, T v) noexcept;
 
 namespace impl {
 

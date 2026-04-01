@@ -14,6 +14,8 @@
 #ifndef SRR_IMPL_ALLOC_HPP_
 #define SRR_IMPL_ALLOC_HPP_
 
+#include "srr/impl/FreeList.hpp"
+
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
 
@@ -26,21 +28,6 @@ concept Alloc = requires(A a, val_t<A> *ptr, usz n) {
     { a.dealloc(ptr, n) } noexcept -> Same<void>;
 };
 
-struct Block {
-    Block *next;
-};
-
-class BlockList {
-public:
-    [[nodiscard]] bool   empty() const noexcept;
-    [[nodiscard]] Block *pop() noexcept;
-    [[nodiscard]] bool   tryrm(Block *b) noexcept;
-    void                 push(Block *b) noexcept;
-
-private:
-    Block *head_;
-};
-
 class SysAlloc {
 public:
     static void *alloc(usz n) noexcept;
@@ -48,7 +35,7 @@ public:
 
 private:
     static constexpr usz N = 12;
-    static BlockList     lists[N];
+    static FreeList      lists[N];
 };
 
 template<typename T> struct BaseAlloc {
@@ -58,8 +45,6 @@ template<typename T> struct BaseAlloc {
     T   *alloc(usz n) noexcept;
     void dealloc(T *ptr, usz n) noexcept;
 };
-
-static_assert(Alloc<BaseAlloc<byte>>);
 
 // === impl ===
 

@@ -19,7 +19,7 @@ i32 main() noexcept {
     str s1{ "Hello, world!" };
     str s2{};
 
-    for (const char c : s1) s2.push(c);
+    for (const byte c : s1) s2.push(c);
 
     LM_CHECK(s1.prefix("Hello"));
     LM_CHECK(s1.suffix("world!"));
