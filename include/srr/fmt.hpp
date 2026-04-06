@@ -16,6 +16,11 @@
 
 #include "srr/impl/Fmter.hpp"
 
+#include "srr/err.hpp"
+#include "srr/str.hpp"
+#include "srr/traits.hpp"
+#include "srr/types.hpp"
+
 inline namespace srr {
 
 // NOLINTNEXTLINE(readability-identifier-naming)
@@ -44,11 +49,6 @@ constexpr void fmt(fmter &buf, T v) noexcept;
 } // namespace srr
 
 #include "srr/impl/Fmt.hpp"
-
-#include "srr/err.hpp"
-#include "srr/str.hpp"
-#include "srr/traits.hpp"
-#include "srr/types.hpp"
 
 inline namespace srr {
 
@@ -147,7 +147,7 @@ constexpr void fmt(fmter &buf, T v) noexcept {
         *--p    = DIGIT_LUT[idx];
     }
 
-    for (; p < rev.end(); ++p) buf.push(*p);
+    buf.push({ p, static_cast<usz>(rev.end() - p) });
 }
 
 } // namespace srr

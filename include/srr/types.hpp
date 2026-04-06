@@ -94,6 +94,10 @@ consteval u16                    operator""_u16(ull v) noexcept;
 consteval u32                    operator""_u32(ull v) noexcept;
 consteval u64                    operator""_u64(ull v) noexcept;
 consteval usz                    operator""_usz(ull v) noexcept;
+consteval uptr                   operator""_uptr(ull v) noexcept;
+
+consteval f32                    operator""_f32(long double v) noexcept;
+consteval f64                    operator""_f64(long double v) noexcept;
 
 // === impl ===
 
@@ -120,6 +124,14 @@ consteval u64  operator""_u64(ull v) noexcept { return static_cast<u64>(v); }
 consteval usz  operator""_usz(ull v) noexcept { return static_cast<usz>(v); }
 
 consteval uptr operator""_uptr(ull v) noexcept { return static_cast<uptr>(v); }
+
+consteval f32  operator""_f32(long double v) noexcept {
+    return static_cast<f32>(v);
+}
+
+consteval f64 operator""_f64(long double v) noexcept {
+    return static_cast<f64>(v);
+}
 
 } // namespace srr
 

@@ -15,6 +15,7 @@
 #define SRR_IMPL_ALLOC_HPP_
 
 #include "srr/impl/FreeList.hpp"
+#include "srr/impl/lang.hpp"
 
 #include "srr/traits.hpp"
 #include "srr/types.hpp"

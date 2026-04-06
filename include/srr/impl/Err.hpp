@@ -42,8 +42,10 @@ public:
     constexpr Ter() noexcept;
     constexpr Ter(Code c) noexcept;
 
-    constexpr bool               operator!() const noexcept;
     constexpr                    operator bool() const noexcept;
+
+    [[nodiscard]] constexpr bool ok() const noexcept;
+    [[nodiscard]] constexpr bool bad() const noexcept;
 
     [[nodiscard]] constexpr strv msg() const noexcept;
     [[nodiscard]] constexpr Code code() const noexcept;
@@ -65,6 +67,8 @@ public:
 
         INVALID_ARG,
         NOT_FOUND,
+        ALREADY_EXISTS,
+        EMPTY,
 
         SYS_FAIL,
 
@@ -107,8 +111,10 @@ public:
     constexpr Err(strv tr) noexcept;
     constexpr Err(strv tr, Code c) noexcept;
 
-    constexpr bool               operator!() const noexcept;
     constexpr                    operator bool() const noexcept;
+
+    [[nodiscard]] constexpr bool ok() const noexcept;
+    [[nodiscard]] constexpr bool bad() const noexcept;
 
     [[nodiscard]] constexpr strv trace() const noexcept;
     [[nodiscard]] constexpr strv msg() const noexcept;
@@ -139,6 +145,8 @@ static constexpr arr<strv, ERRC_COUNT> STR_ERRC = {
 
     "Invalid argument.",
     "Not found.",
+    "Already exists.",
+    "Empty.",
 
     "Unknown system error.",
 
@@ -177,6 +185,8 @@ static constexpr arr<Ter::Code, ERRC_COUNT> ERRC_2_TERC = {
 
     Ter::FAIL, // Err::INVALID_ARG
     Ter::FAIL, // Err::NOT_FOUND
+    Ter::FAIL, // Err::ALREADY_EXISTS
+    Ter::FAIL, // Err::EMPTY
 
     Ter::SYS,  // Err::SYS_FAIL
     Ter::SYS,  // Err::SYS_AGAIN
@@ -208,9 +218,11 @@ constexpr Ter::Ter() noexcept : c_{ OK } {}
 
 constexpr Ter::Ter(Code c) noexcept : c_{ c } {}
 
-constexpr bool Ter::operator!() const noexcept { return c_ == OK; }
-
 constexpr Ter::operator bool() const noexcept { return c_ != OK; }
+
+constexpr bool Ter::ok() const noexcept { return c_ == OK; }
+
+constexpr bool Ter::bad() const noexcept { return c_ != OK; }
 
 constexpr strv Ter::msg() const noexcept {
     return STR_TERC[static_cast<usz>(c_)];
@@ -230,9 +242,11 @@ constexpr Err::Err(strv tr) noexcept : tr_{ tr }, c_{ FAIL } {}
 
 constexpr Err::Err(strv tr, Code c) noexcept : tr_{ tr }, c_{ c } {}
 
-constexpr bool Err::operator!() const noexcept { return c_ == OK; }
-
 constexpr Err::operator bool() const noexcept { return c_ != OK; }
+
+constexpr bool Err::ok() const noexcept { return c_ == OK; }
+
+constexpr bool Err::bad() const noexcept { return c_ != OK; }
 
 constexpr strv Err::trace() const noexcept { return tr_; }
 

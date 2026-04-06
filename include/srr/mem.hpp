@@ -18,7 +18,6 @@
 #include "srr/impl/FreeList.hpp"
 
 #include "srr/alg.hpp"
-#include "srr/intr.hpp"
 #include "srr/traits.hpp"
 #include "srr/types.hpp"
 
@@ -48,7 +47,9 @@ template<typename T> void           dealloc(T *ptr) noexcept;
 
 template<typename T> constexpr void destruct(T *ptr) noexcept;
 template<typename T, typename... U>
-constexpr void construct(T *ptr, U &&...args) noexcept;
+constexpr void                      construct(T *ptr, U &&...args) noexcept;
+
+template<typename T> constexpr void swap(T &a, T &b) noexcept;
 
 template<typename T>
 constexpr bool cmpe(const T *dst, const T *src, usz n) noexcept;
@@ -92,9 +93,22 @@ constexpr void construct(T *ptr, U &&...args) noexcept {
     new (ptr) T{ fwd<U>(args)... };
 }
 
+template<typename T> constexpr void swap(T &a, T &b) noexcept {
+    if constexpr (is_triv_cp_v<T>) {
+        byte tmp[sizeof(T)];
+        copy(tmp, &a, sizeof(T));
+        copy(&a, &b, sizeof(T));
+        copy(&b, tmp, sizeof(T));
+    } else {
+        T tmp = mv(a);
+        a     = mv(b);
+        b     = mv(tmp);
+    }
+}
+
 template<typename T>
 constexpr bool cmpe(const T *dst, const T *src, usz n) noexcept {
-    if constexpr (intr::is_triv_eq_v<T>)
+    if constexpr (is_triv_eq_v<T>)
         return eq(dst, src, n * sizeof(T));
     else
         for (usz i = 0; i < n; ++i)
@@ -107,7 +121,7 @@ template<typename T>
 constexpr usz copye(T *dst, const T *src, usz d, usz s) noexcept {
     const usz n = alg::min(d, s);
 
-    if constexpr (intr::is_triv_cp_v<T>)
+    if constexpr (is_triv_cp_v<T>)
         copy(dst, src, n * sizeof(T));
     else
         for (usz i = 0; i < n; ++i) construct(dst + i, src[i]);
@@ -119,7 +133,7 @@ template<typename T>
 constexpr usz movee(T *dst, const T *src, usz d, usz s) noexcept {
     const usz n = alg::min(d, s);
 
-    if constexpr (intr::is_triv_cp_v<T>)
+    if constexpr (is_triv_cp_v<T>)
         move(dst, src, n * sizeof(T));
     else
         for (usz i = 0; i < n; ++i) construct(dst + i, mv(src[i]));
@@ -128,7 +142,7 @@ constexpr usz movee(T *dst, const T *src, usz d, usz s) noexcept {
 }
 
 template<typename T> constexpr void clse(T *dst, usz n) noexcept {
-    if constexpr (intr::is_triv_ds_v<T>) return;
+    if constexpr (is_triv_ds_v<T>) return;
 
     for (usz i = 0; i < n; ++i) destruct(dst + i);
 }

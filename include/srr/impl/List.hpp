@@ -335,7 +335,7 @@ template<typename T, Alloc A>
 constexpr void List<T, A>::ensure(usz len) noexcept {
     if (len <= cap_) return;
 
-    const usz n = cap_ == 0 ? 8 : (cap_ * 2) - 1;
+    const usz n = cap_ == 0 ? 8 : cap_ * 2;
     res(alg::max(n, len));
 }
 
